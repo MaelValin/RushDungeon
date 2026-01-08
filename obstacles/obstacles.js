@@ -22,16 +22,19 @@ function initObstacles() {
     obstacles1 = new obstacles.Group();
     obstacles1.color = 'red';
     obstacles1.collider = 'kinematic';
+    obstacles1.type = 1;
     
     // Ronds bleus en l'air
     obstacles2 = new obstacles.Group();
     obstacles2.color = 'blue';
     obstacles2.collider = 'kinematic';
+    obstacles2.type = 2;
     
     // Rectangles verts (ni haut ni bas)
     obstacles3 = new obstacles.Group();
     obstacles3.color = 'green';
     obstacles3.collider = 'kinematic';
+    obstacles3.type = 3;
 }
 
 function spawnRandomObstacle() {
