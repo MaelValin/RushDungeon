@@ -1,64 +1,41 @@
 let player;
 let currentLane = 1;
 let readyToJump = true;
-let isJumping = false;
-let jumpFrame = 0;
-let jumpDuration = 60;
-let basePlayerY = 0;
 
 function initPlayer() {
   player = new Sprite();
-  player.width = 100;
-  player.height = 150;
+  player.width = 60;
+  player.height = 90;
   player.rotation = 0;
-  player.visible = false; // Caché au démarrage
+  player.rotationLock = true;
+  player.visible = false;
   player.y = GAME_HEIGHT - 400;
-  basePlayerY = player.y;
-
-  // Load sprite sheet animation
-  // The sprite sheet should have 4 frames arranged horizontally
+  player.layer = 10;
+  
+  // Load run animation
   player.addAni("run", "player/player-spritesheet.png", {
     frameSize: [565, 1440],
     frames: 4,
   });
+  
+  // Load jump animation
+  player.addAni("jump", [
+    "player/jump_anim/jump_1.png",
+    "player/jump_anim/jump_2.png",
+    "player/jump_anim/jump_3.png",
+    "player/jump_anim/jump_4.png",
+    "player/jump_anim/jump_5.png"
+  ]);
+  
   player.ani = "run";
-  player.ani.frameDelay = 8; // Adjust speed of animation (higher = slower)
-  player.ani.scale = 0.4;
-}
-
-function jump() {
-  isJumping = true;
-  jumpFrame = 0;
-}
-
-function updateJump() {
-  if (isJumping) {
-    jumpFrame++;
-    
-    if (jumpFrame <= jumpDuration / 2) {
-      // Going up
-      player.y -= 4;
-    } else if (jumpFrame <= jumpDuration) {
-      // Going down
-      player.y += 4;
-    } else {
-      // Jump finished
-      isJumping = false;
-      jumpFrame = 0;
-      readyToJump = true;
-      player.y = basePlayerY;
-    }
-  }
+  player.ani.frameDelay = 8;
+  player.ani.scale = 0.6;
+  player.ani.rotation = 0;
 }
 
 function updatePlayer() {
-  if (!isJumping) {
-    player.y = GAME_HEIGHT - 400;
-    basePlayerY = player.y;
-  }
-
-  // Update jump animation
-  updateJump();
+  player.y = GAME_HEIGHT - 400;
+  player.layer = 10;
 
   let handPos = getHandPosition();
   let bodyPos = getBodyPosition();
@@ -81,8 +58,7 @@ function updatePlayer() {
   let targetX = getLaneX(currentLane, player.y);
   player.x = lerp(player.x, targetX, 0.2);
 
-  let progress =
-    (player.y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
+  let progress = (player.y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
   progress = constrain(progress, 0, 1);
   let currentLaneWidth = lerp(LANE_WIDTH_TOP, LANE_WIDTH_BOTTOM, progress);
   let totalWidth = currentLaneWidth * NUM_LANES;
@@ -96,13 +72,10 @@ function getCurrentLane() {
 }
 
 function movePlayer() {
-  // Positionner le joueur au centre de sa lane
   let targetX = getLaneX(currentLane, player.y);
-  player.x = lerp(player.x, targetX, 0.1); // ici le 0.1 est la vitesse de transition (plus c'est élévé plus c'est rapide)
+  player.x = lerp(player.x, targetX, 0.1);
 
-  // Limiter le joueur dans les bordes de la route (en gros ça vas s'adapter a la perspective)
-  let progress =
-    (player.y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
+  let progress = (player.y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
   progress = constrain(progress, 0, 1);
   let currentLaneWidth = lerp(LANE_WIDTH_TOP, LANE_WIDTH_BOTTOM, progress);
   let totalWidth = currentLaneWidth * NUM_LANES;
@@ -120,7 +93,63 @@ function movePlayer() {
   if (kb.pressed("w") || kb.pressed("ArrowUp")) {
     if (readyToJump) {
       readyToJump = false;
-      jump();
+      playerVz = JUMP_FORCE;
     }
   }
+
+  jump();
+}
+
+function jump() {
+  if (playerZ > 0 || (playerZ === 0 && playerVz > 0)) {
+    playerVz -= GRAVITY;
+    playerZ += playerVz;
+    
+    if (player.ani.name !== "jump") {
+      player.changeAni("jump");
+      player.ani.noLoop();
+    }
+    
+    // Contrôle manuel des frames basé sur la vélocité
+    if (playerVz > JUMP_FORCE * 0.7) {
+      player.ani.frame = 0;
+    } else if (playerVz > JUMP_FORCE * 0.3) {
+      player.ani.frame = 1;
+    } else if (playerVz > -JUMP_FORCE * 0.3) {
+      player.ani.frame = 2;
+    } else if (playerVz > -JUMP_FORCE * 0.7) {
+      player.ani.frame = 3;
+    } else {
+      player.ani.frame = 4;
+    }
+
+    for (let obs of obstacles1) {
+      obs.collider = "none";
+    }
+
+    if (playerZ <= 0) {
+      playerZ = 0;
+      playerVz = 0;
+      readyToJump = true;
+      
+      player.changeAni("run");
+      player.ani.frameDelay = 8;
+      player.ani.loop();
+
+      for (let obs of obstacles1) {
+        obs.collider = "kinematic";
+      }
+    }
+  } else {
+    readyToJump = true;
+    
+    if (player.ani.name !== "run") {
+      player.changeAni("run");
+      player.ani.frameDelay = 8;
+      player.ani.loop();
+    }
+  }
+
+  player.y = GAME_HEIGHT - 400 - playerZ;
+  player.scale = 1 + playerZ / 800;
 }

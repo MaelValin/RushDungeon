@@ -17,6 +17,7 @@ function initVideo() {
     
     handPose = ml5.handPose(video, () => {
         console.log('HandPose model loaded!');
+        modelsLoaded.handPose = true;
         handPose.detectStart(video, (results) => {
             hands = results;
             handDetected = results.length > 0;
@@ -25,6 +26,7 @@ function initVideo() {
     
     bodyPose = ml5.bodyPose(video, () => {
         console.log('BodyPose model loaded!');
+        modelsLoaded.bodyPose = true;
         bodyPose.detectStart(video, (results) => {
             poses = results;
             poseDetected = results.length > 0;
