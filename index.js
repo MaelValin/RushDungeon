@@ -15,6 +15,7 @@ let grounds;
 let currentLane = 1; // Lane du milieu (0, 1, 2)
 let gameSpeed = 5;
 let score = 0;
+let gameState = 'menu'; // 'menu' ou 'playing' ou 'paused' ou 'gameover'
 
 function setup() {
     new Canvas(GAME_WIDTH, GAME_HEIGHT);
@@ -25,7 +26,7 @@ function setup() {
     player.width = 50;
     player.color = 'blue';
     player.rotation = 0;
-    player.collider = 'kinematic';
+    player.visible = false; // Caché au démarrage
     
     
    
@@ -43,28 +44,50 @@ function setup() {
 function draw() {
     background(20, 20, 40);
     
-    // Dessiner la route avec effet 3D
-    drawRoad();
-    
-    // Déplacer et gérer les obstacles
-    moveObstacles();
+    if (gameState === 'menu') {
+        player.visible = false;
+        displayMenuStart();
+    } 
 
-    // Déplacer le joueur vers la colonne actuelle
-    movePlayer();
+    else if (gameState === 'paused') {
+        // Afficher le menu de pause
+    }
 
-    
-    // Générer de nouveaux obstacles
-    if (frameCount % 80 === 0) {
-        spawnObstacle();
+    else if (gameState === 'gameover') {
+        // Afficher le menu de fin de jeu
+        displayMenuEnd();
     }
     
     
-    
-    // Score
-    score += 0.1;
-    
-    // Interface
-    displayUI();
+    else if (gameState === 'playing') {
+        player.visible = true;
+        
+        // Dessiner la route avec effet 3D
+        drawRoad();
+        
+        // Déplacer et gérer les obstacles
+        moveObstacles();
+
+        // Déplacer le joueur vers la colonne actuelle
+        movePlayer();
+
+        // Vérifier les collisions
+        PlayerLoose();
+
+        
+        // Générer de nouveaux obstacles
+        if (frameCount % 80 === 0) {
+            spawnObstacle();
+        }
+        
+        
+        
+        // Score
+        score += 0.1;
+        
+        // Interface
+        displayUI();
+    }
 }
 
 function drawRoad() {
@@ -130,6 +153,23 @@ function movePlayer() {
     }
 }
 
+function keyPressed() {
+    if (key === ' ') { // ESPACE
+        if (gameState === 'menu') {
+            StartGame();
+        } else if (gameState === 'gameover') {
+            StartGame();
+        }
+        return false; // Empêcher le scroll
+    }
+    if (key === 'm' || key === 'M') { // M pour retour au menu
+        if (gameState === 'gameover') {
+            gameState = 'menu';
+            score = 0;
+        }
+    }
+}
+
 function spawnObstacle() {
     let lane = floor(random(NUM_LANES));
     let obstacle = new obstacles.Sprite();
@@ -162,17 +202,83 @@ function moveObstacles() {
     }
 }
 
+function StartGame() {
+    gameState = 'playing';
+    score = 0;
+    obstacles.removeAll();
+    currentLane = 1;
+    player.x = getLaneX(currentLane, player.y);
+    player.y = GAME_HEIGHT - 400;
+}
 
+function PlayerLoose(){
+    if (player.collides(obstacles)){
+        EndGame();
+    }
+    
+}
 
-function displayUI() {
+function EndGame(){
+    gameState = 'gameover';
+    player.visible = false;
+    obstacles.removeAll();
+}
+
+function PauseGame(){}
+
+function ResumeGame(){}
+
+function RestartGame(){}
+
+function displayMenuStart() {
+    // Afficher le titre
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(72);
+    textStyle(BOLD);
+    text('RushDungeon', GAME_WIDTH / 2, GAME_HEIGHT / 2 - 200);
+    
+    // Afficher les instructions
+    textSize(24);
+    textStyle(NORMAL);
+    fill(150, 200, 255);
+    text('Appuyez sur le bouton START pour commencer', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 100);
+    text('ou appuyez sur ESPACE', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150);
+}
+
+function displayMenuEnd() {
+    // Afficher le titre
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(72);
+    textStyle(BOLD);
+    text('GAME OVER', GAME_WIDTH / 2, GAME_HEIGHT / 2 - 200);
+    
+    // Afficher le score
+    textSize(36);
+    fill(200, 200, 100);
+    text(`Score: ${floor(score)}`, GAME_WIDTH / 2, GAME_HEIGHT / 2 - 50);
+    
+    // Afficher les instructions
+    textSize(24);
+    fill(150, 200, 255);
+    text('Appuyez sur ESPACE pour rejouer', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 80);
+    text('ou appuyez sur M pour retour au menu', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 130);
+}
+
+function displayScore() {
     fill(255);
     noStroke();
-    textSize(20);
-    // textAlign(LEFT);
-    // text(`Score: ${floor(score)}`, 20, 30);
-    // text(`Vitesse: ${gameSpeed}`, 20, 55);
-    // text(`Colonne: ${currentLane + 1}`, 20, 80);
-    
-    // textSize(14);
-    // text(`Q/D ou Flèches: Changer de colonne`, 20, GAME_HEIGHT - 20);
+    textSize(24);
+    textStyle(NORMAL);
+    textAlign(RIGHT, TOP);
+    text(`Score: ${floor(score)}`, GAME_WIDTH - 200, 20);
+}
+
+
+
+ 
+
+function displayUI() {
+    displayScore();
 }
