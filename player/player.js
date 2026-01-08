@@ -41,8 +41,12 @@ function updatePlayer() {
 
   if (handPos !== null) {
     currentLane = floor(handPos * NUM_LANES);
-    currentLane = constrain(currentLane, 0, NUM_LANES - 1);
-  } else if (bodyPos !== null) {
+    currentLane = constrain(currentLane, 0, NUM_LANES - 1);    
+    // Détecter si la main est fermée (poing) pour sauter
+    if (isHandClosed() && readyToJump) {
+      readyToJump = false;
+      playerVz = JUMP_FORCE;
+    }  } else if (bodyPos !== null) {
     currentLane = floor(bodyPos * NUM_LANES);
     currentLane = constrain(currentLane, 0, NUM_LANES - 1);
   } else {

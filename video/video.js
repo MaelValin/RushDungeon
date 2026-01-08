@@ -132,3 +132,31 @@ function getBodyPosition() {
     return null;
 }
 
+function isHandClosed() {
+    if (currentMode !== 'hand' || !handDetected || hands.length === 0) return false;
+    
+    let hand = hands[0];
+    
+    // Récupérer les points clés
+    let wrist = hand.keypoints.find(kp => kp.name === 'wrist');
+    let indexTip = hand.keypoints.find(kp => kp.name === 'index_finger_tip');
+    let middleTip = hand.keypoints.find(kp => kp.name === 'middle_finger_tip');
+    let ringTip = hand.keypoints.find(kp => kp.name === 'ring_finger_tip');
+    let pinkyTip = hand.keypoints.find(kp => kp.name === 'pinky_finger_tip');
+    
+    if (!wrist || !indexTip || !middleTip || !ringTip || !pinkyTip) return false;
+    
+    // Calculer les distances entre le bout des doigts et le poignet
+    let indexDist = dist(indexTip.x, indexTip.y, wrist.x, wrist.y);
+    let middleDist = dist(middleTip.x, middleTip.y, wrist.x, wrist.y);
+    let ringDist = dist(ringTip.x, ringTip.y, wrist.x, wrist.y);
+    let pinkyDist = dist(pinkyTip.x, pinkyTip.y, wrist.x, wrist.y);
+    
+    // Distance moyenne
+    let avgDist = (indexDist + middleDist + ringDist + pinkyDist) / 4;
+    
+    // Si la distance moyenne est petite, la main est fermée (poing)
+    // Ajuster le seuil selon les tests (100-150 généralement)
+    return avgDist < 120;
+}
+
