@@ -11,7 +11,7 @@ function initPlayer() {
   player.visible = false;
   player.layer = 10;
   
-  // Load run animation
+  // Load run animations
   player.addAni("run", "player/player-spritesheet.png", {
     frameSize: [565, 1440],
     frames: 4,
