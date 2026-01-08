@@ -62,21 +62,22 @@ function switchMode() {
 function drawVideo() {
     if (!video) return;
     
+    // Simple image de fond (remplace le décor vidéo)
+    background(20, 20, 40);
+    
     // Dessiner d'abord la vidéo de fond avec effet de rotation
-    if (backgroundVideo && backgroundVideo.elt.readyState >= 2) {
-        push();
-        translate(GAME_WIDTH/2, GAME_HEIGHT/2);
-        rotate(videoRotation);
-        videoRotation += 0.002; // Vitesse de rotation
-        
-        // Effet de zoom pour simuler la profondeur
-        let scale = 1.5 + sin(frameCount * 0.01) * 0.2;
-        imageMode(CENTER);
-        image(backgroundVideo, 0, 0, GAME_WIDTH * scale, GAME_HEIGHT * scale);
-        pop();
-    } else {
-        background(20, 20, 40);
-    }
+    // if (backgroundVideo && backgroundVideo.elt.readyState >= 2) {
+    //     push();
+    //     translate(GAME_WIDTH/2, GAME_HEIGHT/2);
+    //     rotate(videoRotation);
+    //     videoRotation += 0.002; // Vitesse de rotation
+    //     
+    //     // Effet de zoom pour simuler la profondeur
+    //     let scale = 1.5 + sin(frameCount * 0.01) * 0.2;
+    //     imageMode(CENTER);
+    //     image(backgroundVideo, 0, 0, GAME_WIDTH * scale, GAME_HEIGHT * scale);
+    //     pop();
+    // }
     
     let videoAspect = 1280 / 720;
     let canvasAspect = GAME_WIDTH / GAME_HEIGHT;
