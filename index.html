@@ -4,32 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RushDungeon</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #1a1a1a;
-        }
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="video/video.css">
+    <link rel="stylesheet" href="player/player.css">
+    <link rel="stylesheet" href="obstacles/obstacles.css">
+    <link rel="stylesheet" href="road/road.css">
+    <link rel="stylesheet" href="ui/ui.css">
 </head>
 <body>
     <main></main>
+    <button id="modeToggle">Mode: Main</button>
     
-    <!-- q5 (alternative légère à p5.js) -->
     <script src="./node_modules/q5/q5.js"></script>
-    <!-- p5play -->
     <script src="./node_modules/p5play/planck.min.js"></script>
     <script src="./node_modules/p5play/p5play.js"></script>
-    <!-- Votre code -->
-    <script src="./index.js"></script>
+    <script src="https://unpkg.com/ml5@1/dist/ml5.min.js"></script>
+    <script src="./road/road.js"></script>
+    <script src="./video/video.js"></script>
+    <script src="./player/player.js"></script>
+    <script src="./obstacles/obstacles.js"></script>
+    <script src="./ui/ui.js"></script>
+    <script src="./main.js"></script>
 </body>
 </html>
