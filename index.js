@@ -19,6 +19,14 @@ let score = 0;
 function setup() {
     new Canvas(GAME_WIDTH, GAME_HEIGHT);
     world.gravity.y = 0; // Pas de gravité pour un runner
+
+    //joueur
+    player = new Sprite();
+    player.width = 50;
+    player.color = 'blue';
+    player.rotation = 0;
+    player.collider = 'kinematic';
+    
     
    
     
@@ -40,6 +48,10 @@ function draw() {
     
     // Déplacer et gérer les obstacles
     moveObstacles();
+
+    // Déplacer le joueur vers la colonne actuelle
+    movePlayer();
+
     
     // Générer de nouveaux obstacles
     if (frameCount % 80 === 0) {
@@ -95,7 +107,28 @@ function getLaneX(laneIndex, y) {
     return startX + currentLaneWidth * (laneIndex + 0.5);
 }
 
-
+function movePlayer() {
+    // Positionner le joueur au centre de sa lane
+    player.y = GAME_HEIGHT - 400;
+    let targetX = getLaneX(currentLane, player.y);
+    player.x = lerp(player.x, targetX, 0.1); // ici le 0.1 est la vitesse de transition (plus c'est élévé plus c'est rapide)
+    
+    // Limiter le joueur dans les bordes de la route (en gros ça vas s'adapter a la perspective)
+    let progress = (player.y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
+    progress = constrain(progress, 0, 1);
+    let currentLaneWidth = lerp(LANE_WIDTH_TOP, LANE_WIDTH_BOTTOM, progress);
+    let totalWidth = currentLaneWidth * NUM_LANES;
+    let minX = GAME_WIDTH / 2 - totalWidth / 2 + player.width / 2;
+    let maxX = GAME_WIDTH / 2 + totalWidth / 2 - player.width / 2;
+    player.x = constrain(player.x, minX, maxX);
+    
+    if (kb.pressed('a') || kb.pressed('ArrowLeft')) {
+        if (currentLane > 0) currentLane--;
+    }
+    if (kb.pressed('d') || kb.pressed('ArrowRight')) {
+        if (currentLane < NUM_LANES - 1) currentLane++;
+    }
+}
 
 function spawnObstacle() {
     let lane = floor(random(NUM_LANES));
