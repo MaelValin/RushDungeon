@@ -8,12 +8,19 @@ let bodyPose;
 let poses = [];
 let poseDetected = false;
 
-let currentMode = 'hand'; // 'hand' ou 'body'
+// Charger le mode depuis localStorage, sinon utiliser 'hand' par défaut
+let currentMode = localStorage.getItem('gameMode') || 'hand';
 
 function initVideo() {
     video = createCapture(VIDEO);
     video.size(1280, 720);
     video.hide();
+    
+    // Initialiser le bouton avec le mode actuel
+    const btn = document.getElementById('modeToggle');
+    if (btn) {
+        btn.textContent = `Mode: ${currentMode === 'hand' ? 'Main' : 'Corps'}`;
+    }
     
     handPose = ml5.handPose(video, () => {
         console.log('HandPose model loaded!');
@@ -36,6 +43,8 @@ function initVideo() {
 
 function switchMode() {
     currentMode = currentMode === 'hand' ? 'body' : 'hand';
+    // Sauvegarder le mode dans localStorage
+    localStorage.setItem('gameMode', currentMode);
     const btn = document.getElementById('modeToggle');
     btn.textContent = `Mode: ${currentMode === 'hand' ? 'Main' : 'Corps'}`;
     return currentMode;

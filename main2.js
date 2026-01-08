@@ -32,8 +32,17 @@ function setup() {
     initPlayer();
     initObstacles();
     
-    document.getElementById('modeToggle').addEventListener('click', () => {
+    const modeBtn = document.getElementById('modeToggle');
+    modeBtn.addEventListener('click', (e) => {
         switchMode();
+        e.target.blur(); // Retirer le focus après le clic
+    });
+    
+    // Empêcher la barre espace d'activer le bouton
+    modeBtn.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+        }
     });
 }
 
