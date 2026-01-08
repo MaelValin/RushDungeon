@@ -9,7 +9,6 @@ function initPlayer() {
   player.rotation = 0;
   player.rotationLock = true;
   player.visible = false;
-  player.y = GAME_HEIGHT - 400;
   player.layer = 10;
   
   // Load run animation
@@ -34,7 +33,7 @@ function initPlayer() {
 }
 
 function updatePlayer() {
-  player.y = GAME_HEIGHT - 400;
+  player.y = GAME_HEIGHT - 200;
   player.layer = 10;
 
   let handPos = getHandPosition();
@@ -48,10 +47,21 @@ function updatePlayer() {
     currentLane = constrain(currentLane, 0, NUM_LANES - 1);
   } else {
     if (kb.pressed("a") || kb.pressed("ArrowLeft")) {
-      if (currentLane > 0) currentLane--;
+      if (!wasLeftPressed) {
+        if (currentLane > 0) currentLane--;
+        wasLeftPressed = true;
+      }
+    } else {
+      wasLeftPressed = false;
     }
+    
     if (kb.pressed("d") || kb.pressed("ArrowRight")) {
-      if (currentLane < NUM_LANES - 1) currentLane++;
+      if (!wasRightPressed) {
+        if (currentLane < NUM_LANES - 1) currentLane++;
+        wasRightPressed = true;
+      }
+    } else {
+      wasRightPressed = false;
     }
   }
 
@@ -65,30 +75,6 @@ function updatePlayer() {
   let minX = GAME_WIDTH / 2 - totalWidth / 2 + player.width / 2;
   let maxX = GAME_WIDTH / 2 + totalWidth / 2 - player.width / 2;
   player.x = constrain(player.x, minX, maxX);
-}
-
-function getCurrentLane() {
-  return currentLane;
-}
-
-function movePlayer() {
-  let targetX = getLaneX(currentLane, player.y);
-  player.x = lerp(player.x, targetX, 0.1);
-
-  let progress = (player.y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
-  progress = constrain(progress, 0, 1);
-  let currentLaneWidth = lerp(LANE_WIDTH_TOP, LANE_WIDTH_BOTTOM, progress);
-  let totalWidth = currentLaneWidth * NUM_LANES;
-  let minX = GAME_WIDTH / 2 - totalWidth / 2 + player.width / 2;
-  let maxX = GAME_WIDTH / 2 + totalWidth / 2 - player.width / 2;
-  player.x = constrain(player.x, minX, maxX);
-
-  if (kb.pressed("a") || kb.pressed("ArrowLeft")) {
-    if (currentLane > 0) currentLane--;
-  }
-  if (kb.pressed("d") || kb.pressed("ArrowRight")) {
-    if (currentLane < NUM_LANES - 1) currentLane++;
-  }
 
   if (kb.pressed("w") || kb.pressed("ArrowUp")) {
     if (readyToJump) {
@@ -98,6 +84,10 @@ function movePlayer() {
   }
 
   jump();
+}
+
+function getCurrentLane() {
+  return currentLane;
 }
 
 function jump() {
@@ -150,6 +140,6 @@ function jump() {
     }
   }
 
-  player.y = GAME_HEIGHT - 400 - playerZ;
+  player.y = GAME_HEIGHT - 200 - playerZ;
   player.scale = 1 + playerZ / 800;
 }

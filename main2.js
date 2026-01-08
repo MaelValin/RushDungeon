@@ -72,7 +72,6 @@ function draw() {
         drawVideo();
         drawRoad();
         updatePlayer();
-        movePlayer();
 
         // Vérifier les collisions
         PlayerLoose();
