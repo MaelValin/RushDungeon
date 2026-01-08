@@ -53,6 +53,9 @@ function EndGame(){
     gameState = 'gameover';
     player.visible = false;
     obstacles.removeAll();
+    
+    // Sauvegarder le mode actuel dans localStorage
+    localStorage.setItem('gameMode', currentMode);
 }
 
 function PauseGame(){}
