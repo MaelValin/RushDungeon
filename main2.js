@@ -14,6 +14,9 @@ let modelsLoaded = {
     bodyPose: false
 };
 
+// Variable pour la musique de fond
+let backgroundMusic;
+
 function areModelsLoaded() {
     return modelsLoaded.handPose && modelsLoaded.bodyPose;
 }
@@ -24,6 +27,16 @@ let playerVz = 0; // Vélocité Z (montée/descente)
 const GRAVITY = 0.9; // Accélération vers le bas
 const JUMP_FORCE = 20; // Force du saut initial (réduit pour sauter moins haut)
 
+// Fonction pour initialiser et jouer la musique en boucle
+function initMusic() {
+    backgroundMusic = new Audio('assets/f4e2611a-6871-485a-9738-c1c7746db9e0.wav');
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.5;
+    backgroundMusic.play().catch(err => {
+        console.log("La musique nécessite une interaction utilisateur pour démarrer");
+    });
+}
+
 function setup() {
     new Canvas(GAME_WIDTH, GAME_HEIGHT);
     world.gravity.y = 0;
@@ -31,6 +44,7 @@ function setup() {
     initVideo();
     initPlayer();
     initObstacles();
+    initMusic(); // Démarre la musique
     
     const modeBtn = document.getElementById('modeToggle');
     modeBtn.addEventListener('click', (e) => {
