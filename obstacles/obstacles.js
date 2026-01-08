@@ -1,33 +1,113 @@
 let obstacles;
 
+let obstacles1;
+let obstacles2;
+let obstacles3;
+
+//obstacle dimensions
+let obstacle1Width = 120;
+let obstacle1Height = 120;
+
+let obstacle2Width = 90;
+let obstacle2Height = 90;
+
+let obstacle3Width = 120;
+let obstacle3Height = 180;
+
 function initObstacles() {
+    // Créer le groupe parent
     obstacles = new Group();
-    obstacles.color = 'red';
-    obstacles.collider = 'kinematic';
+    
+   // Groupes d'obstacles - Carrés rouges au sol
+    obstacles1 = new obstacles.Group();
+    obstacles1.color = 'red';
+    obstacles1.collider = 'kinematic';
+    
+    // Ronds bleus en l'air
+    obstacles2 = new obstacles.Group();
+    obstacles2.color = 'blue';
+    obstacles2.collider = 'kinematic';
+    
+    // Rectangles verts (ni haut ni bas)
+    obstacles3 = new obstacles.Group();
+    obstacles3.color = 'green';
+    obstacles3.collider = 'kinematic';
 }
 
-function spawnObstacle() {
+function spawnRandomObstacle() {
     let lane = floor(random(NUM_LANES));
-    let obstacle = new obstacles.Sprite();
-    obstacle.width = 40;
-    obstacle.height = 50;
+    let obstacleType = floor(random(3)); // 0, 1, ou 2
+    
+    if (obstacleType === 0) {
+        spawnObstacle1(lane); // Carré rouge au sol
+    } else if (obstacleType === 1) {
+        spawnObstacle2(lane); // Rond bleu en l'air
+    } else {
+        spawnObstacle3(lane); // Rectangle vert moyen
+    }
+}
+
+function spawnObstacle1(lane) {
+    // Carré rouge au sol (on peut sauter ou esquiver)
+    let obstacle = new obstacles1.Sprite();
+    obstacle.width = obstacle1Width;
+    obstacle.height = obstacle1Height;
     obstacle.x = getLaneX(lane, PERSPECTIVE_START_Y);
     obstacle.y = PERSPECTIVE_START_Y;
     obstacle.lane = lane;
-    obstacle.color = color(random(200, 255), 0, random(100, 200));
+    obstacle.color = 'red';
+    obstacle.type = 1;
 }
 
-function updateObstacles() {
-    for (let obs of obstacles) {
+function spawnObstacle2(lane) {
+    // Rond bleu en l'air (on passe en dessous ou esquive)
+    let obstacle = new obstacles2.Sprite();
+    obstacle.diameter = obstacle2Width;
+    obstacle.x = getLaneX(lane, PERSPECTIVE_START_Y);
+    obstacle.y = PERSPECTIVE_START_Y;
+    obstacle.lane = lane;
+    obstacle.color = 'blue';
+    obstacle.type = 2;
+}
+
+function spawnObstacle3(lane) {
+    // Rectangle vert (on ne peut qu'esquiver)
+    let obstacle = new obstacles3.Sprite();
+    obstacle.width = obstacle3Width;
+    obstacle.height = obstacle3Height;
+    obstacle.x = getLaneX(lane, PERSPECTIVE_START_Y);
+    obstacle.y = PERSPECTIVE_START_Y;
+    obstacle.lane = lane;
+    obstacle.color = 'green';
+    obstacle.type = 3;
+}
+
+function moveObstacles() {
+    // Déplacer tous les types d'obstacles
+    let allObstacles = [...obstacles1, ...obstacles2, ...obstacles3];
+    
+    for (let obs of allObstacles) {
         obs.y += gameSpeed;
+        
+        // Ajuster la position X selon l'effet de perspective
         obs.x = getLaneX(obs.lane, obs.y);
         
+        // Ajuster la taille selon la distance (effet 3D)
         let progress = (obs.y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
         progress = constrain(progress, 0, 1);
         let scale = lerp(0.5, 1, progress);
-        obs.width = 40 * scale;
-        obs.height = 50 * scale;
         
+        if (obs.type === 1) {
+            obs.width = obstacle1Width * scale;
+            obs.height = obstacle1Height * scale;
+        } else if (obs.type === 2) {
+            obs.diameter = obstacle2Width * scale;
+        } else if (obs.type === 3) {
+            obs.width = obstacle3Width * scale;
+            obs.height = obstacle3Height * scale;
+        }
+        
+        // Supprimer si hors écran
         if (obs.y > GAME_HEIGHT + 50) {
             obs.remove();
         }
