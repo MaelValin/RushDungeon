@@ -207,6 +207,7 @@ function StartGame() {
     score = 0;
     obstacles.removeAll();
     currentLane = 1;
+    rotation = 0;
     player.x = getLaneX(currentLane, player.y);
     player.y = GAME_HEIGHT - 400;
 }
