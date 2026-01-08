@@ -59,7 +59,7 @@ function draw() {
     
     else if (gameState === 'menu') {
         background(20, 20, 40);
-        drawVideo();
+        drawRoad();
         player.visible = false;
         displayMenuStart();
     } 
@@ -70,7 +70,7 @@ function draw() {
 
     else if (gameState === 'gameover') {
         background(20, 20, 40);
-        drawVideo();
+        drawRoad();
         // Afficher le menu de fin de jeu
         displayMenuEnd();
     }
