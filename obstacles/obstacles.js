@@ -69,6 +69,7 @@ function spawnObstacle1(lane) {
     obstacle.lane = lane;
     obstacle.color = 'red';
     obstacle.type = 1;
+    obstacle.layer = 0; // Derrière le joueur
 }
 
 function spawnObstacle2(lane) {
@@ -80,6 +81,7 @@ function spawnObstacle2(lane) {
     obstacle.y = PERSPECTIVE_START_Y;
     obstacle.lane = lane;
     obstacle.type = 2;
+    obstacle.layer = 0; // Derrière le joueur
     obstacle.addAni('fly', corbeauAni);
     obstacle.changeAni('fly');
     obstacle.ani.frameDelay = 8; // Vitesse de l'animation
@@ -95,6 +97,7 @@ function spawnObstacle3(lane) {
     obstacle.lane = lane;
     obstacle.color = 'green';
     obstacle.type = 3;
+    obstacle.layer = 0; // Derrière le joueur
 }
 
 function moveObstacles() {

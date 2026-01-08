@@ -25,10 +25,10 @@ function StartGame() {
 }
 
 function PlayerLoose(){
-    if (player.collides(obstacles)){
+    // Collision uniquement si le joueur est au sol (immunité en sautant)
+    if (playerZ === 0 && player.collides(obstacles)){
         EndGame();
     }
-    
 }
 
 function EndGame(){

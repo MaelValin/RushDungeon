@@ -72,8 +72,43 @@ function movePlayer() {
     if (kb.pressed('w') || kb.pressed('ArrowUp')) {
         if (readyToJump){
             readyToJump = false;
-            jump();
+            playerVz = JUMP_FORCE; // Initier le saut
         }
 
     }
+    
+    // Appliquer la physique du saut
+    jump();
+}
+
+function jump() {
+    if (playerZ > 0 || (playerZ === 0 && playerVz > 0)) {
+        // Appliquer la gravité
+        playerVz -= GRAVITY;
+        playerZ += playerVz;
+        
+        // Désactiver les colliders des obstacles type 1 quand en l'air
+        for (let obs of obstacles1) {
+            obs.collider = 'none';
+        }
+        
+        // Si le joueur touche le sol
+        if (playerZ <= 0) {
+            playerZ = 0;
+            playerVz = 0;
+            readyToJump = true; // Peut sauter de nouveau
+            
+            // Réactiver les colliders des obstacles type 1
+            for (let obs of obstacles1) {
+                obs.collider = 'kinematic';
+            }
+        }
+    } else {
+        readyToJump = true; // Peut sauter s'il est au sol
+    }
+    
+    // Appliquer la hauteur Z à la position Y visuelle
+    player.y = (GAME_HEIGHT - 400) - playerZ;
+    // Scale augmente en l'air
+    player.scale = 1 + (playerZ / 300);
 }
