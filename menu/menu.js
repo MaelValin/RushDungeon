@@ -25,9 +25,27 @@ function StartGame() {
 }
 
 function PlayerLoose(){
-    // Collision uniquement si le joueur est au sol (immunité en sautant)
-    if (playerZ === 0 && player.collides(obstacles)){
-        EndGame();
+    // Vérifier les collisions selon le type d'obstacle et l'état du joueur
+    for (let obs of obstacles) {
+        if (player.overlaps(obs)) {
+            // Obstacle 1 (rouge au sol) : collision seulement si le joueur ne saute pas
+            if (obs.type === 1 && playerZ === 0) {
+                EndGame();
+                return;
+            }
+            
+            // Obstacle 2 (corbeau en l'air) : collision seulement si le joueur saute
+            if (obs.type === 2 && playerZ > 0) {
+                EndGame();
+                return;
+            }
+            
+            // Obstacle 3 (arbre) : collision toujours, sauf si le joueur saute assez haut
+            if (obs.type === 3 && playerZ < 100) {
+                EndGame();
+                return;
+            }
+        }
     }
 }
 

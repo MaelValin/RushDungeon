@@ -8,10 +8,13 @@ function initPlayer() {
     player.rotation = 0;
     player.visible = false; // Caché au démarrage
     player.y = GAME_HEIGHT - 400;
+    player.layer = 10; // Toujours au-dessus des obstacles
 }
 
 function updatePlayer() {
     player.y = GAME_HEIGHT - 400;
+    player.layer = 10; // Toujours au-dessus des obstacles
+
     
     let handPos = getHandPosition();
     let bodyPos = getBodyPosition();
