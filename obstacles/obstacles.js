@@ -48,7 +48,7 @@ function initObstacles() {
     obstacles2 = new obstacles.Group();
     obstacles2.collider = 'kinematic';
     obstacles2.type = 2;
-    obstacles2.layer = 0;
+    obstacles2.layer = 20;
     obstacles2.debug = true; // Afficher le contour
     
     // Rectangles verts (ni haut ni bas)
@@ -96,7 +96,7 @@ function spawnObstacle2(lane) {
     obstacle.y = PERSPECTIVE_START_Y;
     obstacle.lane = lane;
     obstacle.type = 2;
-    obstacle.layer = 0; // Derrière le joueur
+    obstacle.layer = 20; // Au-dessus du joueur
     obstacle.addAni('fly', corbeauAni);
     obstacle.changeAni('fly');
     obstacle.ani.frameDelay = 8; // Vitesse de l'animation
