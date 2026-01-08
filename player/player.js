@@ -50,11 +50,19 @@ function getCurrentLane() {
 
 
 function movePlayer() {
+    // Changer de colonne avec les touches (une seule fois par appui)
+    if (kb.presses('a') || kb.presses('ArrowLeft')) {
+        if (currentLane > 0) currentLane--;
+    }
+    if (kb.presses('d') || kb.presses('ArrowRight')) {
+        if (currentLane < NUM_LANES - 1) currentLane++;
+    }
+    
     // Positionner le joueur au centre de sa lane
     let targetX = getLaneX(currentLane, player.y);
-    player.x = lerp(player.x, targetX, 0.1); // ici le 0.1 est la vitesse de transition (plus c'est élévé plus c'est rapide)
+    player.x = lerp(player.x, targetX, 0.3); // 0.3 = transition plus rapide
     
-    // Limiter le joueur dans les bordes de la route (en gros ça vas s'adapter a la perspective)
+    // Limiter le joueur dans les bordes de la route
     let progress = (player.y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
     progress = constrain(progress, 0, 1);
     let currentLaneWidth = lerp(LANE_WIDTH_TOP, LANE_WIDTH_BOTTOM, progress);
@@ -62,20 +70,12 @@ function movePlayer() {
     let minX = GAME_WIDTH / 2 - totalWidth / 2 + player.width / 2;
     let maxX = GAME_WIDTH / 2 + totalWidth / 2 - player.width / 2;
     player.x = constrain(player.x, minX, maxX);
-    
-    if (kb.pressed('a') || kb.pressed('ArrowLeft')) {
-        if (currentLane > 0) currentLane--;
-    }
-    if (kb.pressed('d') || kb.pressed('ArrowRight')) {
-        if (currentLane < NUM_LANES - 1) currentLane++;
-    }
 
-    if (kb.pressed('w') || kb.pressed('ArrowUp')) {
+    if (kb.presses('w') || kb.presses('ArrowUp')) {
         if (readyToJump){
             readyToJump = false;
             playerVz = JUMP_FORCE; // Initier le saut
         }
-
     }
     
     // Appliquer la physique du saut
