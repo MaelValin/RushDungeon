@@ -16,6 +16,7 @@ let currentLane = 1; // Lane du milieu (0, 1, 2)
 let gameSpeed = 5;
 let score = 0;
 let gameState = 'menu'; // 'menu' ou 'playing' ou 'paused' ou 'gameover'
+let readyToJump = true;
 
 function setup() {
     new Canvas(GAME_WIDTH, GAME_HEIGHT);
@@ -27,6 +28,7 @@ function setup() {
     player.color = 'blue';
     player.rotation = 0;
     player.visible = false; // Caché au démarrage
+    player.y = GAME_HEIGHT - 400;
     
     
    
@@ -132,7 +134,6 @@ function getLaneX(laneIndex, y) {
 
 function movePlayer() {
     // Positionner le joueur au centre de sa lane
-    player.y = GAME_HEIGHT - 400;
     let targetX = getLaneX(currentLane, player.y);
     player.x = lerp(player.x, targetX, 0.1); // ici le 0.1 est la vitesse de transition (plus c'est élévé plus c'est rapide)
     
@@ -151,6 +152,31 @@ function movePlayer() {
     if (kb.pressed('d') || kb.pressed('ArrowRight')) {
         if (currentLane < NUM_LANES - 1) currentLane++;
     }
+
+    if (kb.pressed('w') || kb.pressed('ArrowUp')) {
+        if (readyToJump){
+            readyToJump = false;
+            jump();
+        }
+
+    }
+}
+
+
+function jump(){
+    tempsSaut = 60;
+    for (let i = 0; i < tempsSaut; i++){
+        if (i > tempsSaut /2){
+            player.y += 2;
+        }
+        else{
+        player.y -= 2;
+        if (i === tempsSaut -1){
+            readyToJump = true;
+            }
+        }
+    }
+    
 }
 
 function keyPressed() {
@@ -207,7 +233,6 @@ function StartGame() {
     score = 0;
     obstacles.removeAll();
     currentLane = 1;
-    rotation = 0;
     player.x = getLaneX(currentLane, player.y);
     player.y = GAME_HEIGHT - 400;
 }
