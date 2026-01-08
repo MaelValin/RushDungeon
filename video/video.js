@@ -1,5 +1,7 @@
 // VERSION AVEC DETECTION DE LA MAIN (active)
 let video;
+let backgroundVideo; // Vidéo de fond du jeu
+let videoRotation = 0; // Rotation du plan vidéo 3D
 let handPose;
 let hands = [];
 let handDetected = false;
@@ -15,6 +17,13 @@ function initVideo() {
     video = createCapture(VIDEO);
     video.size(1280, 720);
     video.hide();
+    
+    // Charger la vidéo de fond
+    backgroundVideo = createVideo('assets/fond.mp4');
+    backgroundVideo.elt.loop = true;
+    backgroundVideo.elt.volume = 0;
+    backgroundVideo.elt.muted = true;
+    backgroundVideo.hide();
     
     // Initialiser le bouton avec le mode actuel
     const btn = document.getElementById('modeToggle');
@@ -53,7 +62,21 @@ function switchMode() {
 function drawVideo() {
     if (!video) return;
     
-    background(20, 20, 40);
+    // Dessiner d'abord la vidéo de fond avec effet de rotation
+    if (backgroundVideo && backgroundVideo.elt.readyState >= 2) {
+        push();
+        translate(GAME_WIDTH/2, GAME_HEIGHT/2);
+        rotate(videoRotation);
+        videoRotation += 0.002; // Vitesse de rotation
+        
+        // Effet de zoom pour simuler la profondeur
+        let scale = 1.5 + sin(frameCount * 0.01) * 0.2;
+        imageMode(CENTER);
+        image(backgroundVideo, 0, 0, GAME_WIDTH * scale, GAME_HEIGHT * scale);
+        pop();
+    } else {
+        background(20, 20, 40);
+    }
     
     let videoAspect = 1280 / 720;
     let canvasAspect = GAME_WIDTH / GAME_HEIGHT;

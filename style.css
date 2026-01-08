@@ -40,3 +40,8 @@ main {
 #modeToggle:active {
   transform: translateY(0);
 }
+
+/* Cacher la vidéo HTML, elle est gérée dans le canvas */
+#background-video {
+  display: none;
+}
