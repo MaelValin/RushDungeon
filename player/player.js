@@ -7,12 +7,10 @@ function initPlayer() {
     player.color = 'blue';
     player.rotation = 0;
     player.visible = false; // Caché au démarrage
-    player.y = GAME_HEIGHT - 400;
     player.layer = 10; // Toujours au-dessus des obstacles
 }
 
 function updatePlayer() {
-    player.y = GAME_HEIGHT - 400;
     player.layer = 10; // Toujours au-dessus des obstacles
 
     
@@ -111,7 +109,7 @@ function jump() {
     }
     
     // Appliquer la hauteur Z à la position Y visuelle
-    player.y = (GAME_HEIGHT - 400) - playerZ;
+    player.y = (GAME_HEIGHT - 200) - playerZ;
     // Scale augmente en l'air
     player.scale = 1 + (playerZ / 300);
 }
