@@ -5,6 +5,7 @@
 	"author": "p5play",
 	"license": "CC0",
 	"dependencies": {
+		"ml5": "^1.0.1",
 		"p5play": "^3.24.1",
 		"q5": "^2.9.3"
 	},
