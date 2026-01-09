@@ -3,9 +3,13 @@ let obstacles;
 let obstacles1;
 let obstacles2;
 let obstacles3;
+let obstacles4;
 
 // Animation du corbeau
 let corbeauAni;
+
+// Animation de l'épée
+let epeeAni;
 
 // Images des arbres
 let arbreImages = [];
@@ -20,12 +24,22 @@ let obstacle2Height = 150;
 let obstacle3Width = 180;  // Arbres - augmenté
 let obstacle3Height = 280; // Arbres - augmenté
 
+let obstacle4Width = 80;   // Bonus - petit
+let obstacle4Height = 80;  // Bonus - petit
+
 function initObstacles() {
     // Créer le groupe parent
     obstacles = new Group();
     
     // Charger l'animation du corbeau (spritesheet 4 images de 800x800)
     corbeauAni = loadAni('./assets/corbeau.png', {
+        width: 800,
+        height: 800,
+        frames: 4
+    });
+
+    //chatger l'animation de l'épée
+    epeeAni = loadAni('./assets/épée.png', {
         width: 800,
         height: 800,
         frames: 4
@@ -59,20 +73,29 @@ function initObstacles() {
     obstacles3.layer = 10;
     obstacles3.debug = true; // Afficher le contour
 
+    // Bonus (étoile jaune/dorée)
+    obstacles4 = new obstacles.Group();
+    obstacles4.color = 'gold';
+    obstacles4.collider = 'kinematic';
+    obstacles4.type = 4;
+    obstacles4.layer = 10;
+    obstacles4.debug = true; // Afficher le contour
     
     
-}
+    }
 
 function spawnRandomObstacle() {
     let lane = floor(random(NUM_LANES));
-    let obstacleType = floor(random(3)); // 0, 1, ou 2
+    let obstacleType = floor(random(4)); // 0, 1, 2, ou 3
     
     if (obstacleType === 0) {
         spawnObstacle1(lane); // Carré rouge au sol
     } else if (obstacleType === 1) {
         spawnObstacle2(lane); // Rond bleu en l'air
-    } else {
+    } else if (obstacleType === 2) {
         spawnObstacle3(lane); // Rectangle vert moyen
+    } else {
+        spawnObstacle4(lane); // Bonus doré
     }
 }
 
@@ -122,9 +145,22 @@ function spawnObstacle3(lane) {
     obstacle.height = obstacle3Height;
 }
 
+function spawnObstacle4(lane) {
+    // Bonus doré (le joueur peut le récupérer pour gagner des points)
+    let obstacle = new obstacles4.Sprite();
+    obstacle.x = getLaneX(lane, PERSPECTIVE_START_Y);
+    obstacle.y = PERSPECTIVE_START_Y;
+    obstacle.lane = lane;
+    obstacle.type = 4;
+    obstacle.layer = 10; // Derrière le joueur
+    obstacle.color = 'gold';
+    obstacle.width = obstacle4Width;
+    obstacle.height = obstacle4Height;
+}
+
 function moveObstacles() {
     // Déplacer tous les types d'obstacles
-    let allObstacles = [...obstacles1, ...obstacles2, ...obstacles3];
+    let allObstacles = [...obstacles1, ...obstacles2, ...obstacles3, ...obstacles4];
     
     for (let obs of allObstacles) {
         obs.y += gameSpeed;
@@ -147,6 +183,9 @@ function moveObstacles() {
         } else if (obs.type === 3) {
             obs.width = obstacle3Width * scale;
             obs.height = obstacle3Height * scale;
+        } else if (obs.type === 4) {
+            obs.width = obstacle4Width * scale;
+            obs.height = obstacle4Height * scale;
         }
         
         // Supprimer si hors écran
