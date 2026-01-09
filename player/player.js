@@ -1,8 +1,10 @@
 let player;
 let currentLane = 1;
 let readyToJump = true;
-let soundSwitch, soundJump;
+let soundSwitch, soundJump, soundBonus, soundKillMob;
 let hasWeapon = false;
+let wasLeftPressed = false;
+let wasRightPressed = false;
 
 function initPlayer() {
   player = new Sprite();
@@ -13,9 +15,14 @@ function initPlayer() {
   player.visible = false;
   player.layer = 20;
   
+  // Réinitialiser l'épée
+  hasWeapon = false;
+  
   // Charger les sons
   soundSwitch = loadSound('assets/switchRightLeft.mp3');
   soundJump = loadSound('assets/jump.mp3');
+  soundBonus = loadSound('assets/bonus.mp3');
+  soundKillMob = loadSound('assets/killMob.mp3');
   
   // Load run animations
   player.addAni("run", "player/player-spritesheet.png", {
@@ -113,53 +120,72 @@ function getCurrentLane() {
 }
 
 function checkObstacleCollisions() {
-  // Vérifier les collisions avec les bonus (type 4)
-  for (let bonus of obstacles4) {
-    let distance = dist(player.x, player.y, bonus.x, bonus.y);
-    let collisionRadius = (player.width + bonus.width) / 2 + 20; // +20 pour augmenter la zone de détection
-    
-    if (distance < collisionRadius) {
-      hasWeapon = true;
-      console.log("Épée obtenue! Distance:", distance, "Rayon:", collisionRadius);
-      bonus.remove();
+  // Vérifier les collisions avec les bonus (type 4) - mais seulement si on n'a pas d'épée
+  if (!hasWeapon) {
+    for (let bonus of obstacles4) {
+      let distance = dist(player.x, player.y, bonus.x, bonus.y);
+      let collisionRadius = (player.width + bonus.width) / 2 + 30;
+      
+      if (distance < collisionRadius) {
+        hasWeapon = true;
+        console.log("Épée obtenue!");
+        if (soundBonus) soundBonus.play();
+        bonus.remove();
+      }
     }
   }
   
-  // Vérifier les collisions avec les autres obstacles
+  // Vérifier les collisions avec les autres obstacles si on a une épée
   if (hasWeapon) {
     // Vérifier type 1
-    for (let obs of obstacles1) {
+    for (let i = obstacles1.length - 1; i >= 0; i--) {
+      let obs = obstacles1[i];
       let distance = dist(player.x, player.y, obs.x, obs.y);
-      let collisionRadius = (player.width + obs.width) / 2 + 20;
+      let collisionRadius = (player.width + obs.width) / 2 + 30;
       
-      if (distance < collisionRadius) {
-        console.log("Obstacle type 1 détruit! Distance:", distance, "Rayon:", collisionRadius);
+      // L'obstacle doit être devant le joueur (Y du joueur < Y de l'obstacle < Y du joueur + 150)
+      if (distance < collisionRadius && obs.y > player.y && obs.y < player.y + 150) {
+        console.log("Obstacle type 1 détruit!");
+        if (soundKillMob) soundKillMob.play();
         obs.remove();
         hasWeapon = false;
+        break;
       }
     }
     
     // Vérifier type 2
-    for (let obs of obstacles2) {
-      let distance = dist(player.x, player.y, obs.x, obs.y);
-      let collisionRadius = (player.width + obs.w) / 2 + 20;
-      
-      if (distance < collisionRadius) {
-        console.log("Obstacle type 2 détruit! Distance:", distance, "Rayon:", collisionRadius);
-        obs.remove();
-        hasWeapon = false;
+    if (hasWeapon) {
+      for (let i = obstacles2.length - 1; i >= 0; i--) {
+        let obs = obstacles2[i];
+        let distance = dist(player.x, player.y, obs.x, obs.y);
+        let collisionRadius = (player.width + obs.w) / 2 + 30;
+        
+        // L'obstacle doit être devant le joueur
+        if (distance < collisionRadius && obs.y > player.y && obs.y < player.y + 150) {
+          console.log("Obstacle type 2 détruit!");
+          if (soundKillMob) soundKillMob.play();
+          obs.remove();
+          hasWeapon = false;
+          break;
+        }
       }
     }
     
     // Vérifier type 3
-    for (let obs of obstacles3) {
-      let distance = dist(player.x, player.y, obs.x, obs.y);
-      let collisionRadius = (player.width + obs.width) / 2 + 20;
-      
-      if (distance < collisionRadius) {
-        console.log("Obstacle type 3 détruit! Distance:", distance, "Rayon:", collisionRadius);
-        obs.remove();
-        hasWeapon = false;
+    if (hasWeapon) {
+      for (let i = obstacles3.length - 1; i >= 0; i--) {
+        let obs = obstacles3[i];
+        let distance = dist(player.x, player.y, obs.x, obs.y);
+        let collisionRadius = (player.width + obs.width) / 2 + 30;
+        
+        // L'obstacle doit être devant le joueur
+        if (distance < collisionRadius && obs.y > player.y && obs.y < player.y + 150) {
+          console.log("Obstacle type 3 détruit!");
+          if (soundKillMob) soundKillMob.play();
+          obs.remove();
+          hasWeapon = false;
+          break;
+        }
       }
     }
   }
