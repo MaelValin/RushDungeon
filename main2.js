@@ -10,7 +10,7 @@ let gameSpeed = 5;
 let score = 0;
 let spawnInterval = 80; // Intervalle de spawn initial
 let lastSpawnFrame = 0; // Dernier frame où un obstacle a spawné
-let gameState = 'loading'; // 'loading', 'menu', 'playing', 'paused', 'gameover'
+let gameState = 'menu'; // 'loading', 'menu', 'playing', 'paused', 'gameover'
 let modelsLoaded = {
     handPose: false,
     bodyPose: false
@@ -46,6 +46,7 @@ function setup() {
     initVideo();
     initPlayer();
     initObstacles();
+    initMenu(); // Charger le logo
     initMusic(); // Démarre la musique
     
     const modeBtn = document.getElementById('modeToggle');
@@ -63,7 +64,19 @@ function setup() {
 }
 
 function draw() {
-    if (gameState === 'loading') {
+    if (gameState === 'menu') {
+        background(20, 20, 40);
+        drawRoad();
+        player.visible = false;
+        displayMenuStart();
+        
+        // Afficher l'état de chargement des modèles dans le menu
+        if (!areModelsLoaded()) {
+            displayLoadingOverlay();
+        }
+    }
+    
+    else if (gameState === 'loading') {
         background(20, 20, 40);
         displayLoadingScreen();
         
@@ -72,13 +85,6 @@ function draw() {
             gameState = 'menu';
         }
     }
-    
-    else if (gameState === 'menu') {
-        background(20, 20, 40);
-        drawRoad();
-        player.visible = false;
-        displayMenuStart();
-    } 
 
     else if (gameState === 'paused') {
         // Afficher le menu de pause
@@ -125,8 +131,8 @@ function displayScore() {
     noStroke();
     textSize(24);
     textStyle(NORMAL);
-    textAlign(RIGHT, TOP);
-    text(`Score: ${floor(score)}`, GAME_WIDTH - 200, 20);
+    textAlign(LEFT, TOP);
+    text(`Score: ${floor(score)}`, 10, 185); // En dessous de la caméra (169px + 16px de marge)
 }
 
 function displayUI() {
@@ -134,24 +140,49 @@ function displayUI() {
 }
 
 function displayLoadingScreen() {
-    fill(255);
+    fill(255, 140, 0); // Orange du thème
     textSize(48);
     textAlign(CENTER, CENTER);
     textStyle(BOLD);
-    text('CHARGEMENT...', GAME_WIDTH / 2, GAME_HEIGHT / 2 - 50);
+    text('LOADING...', GAME_WIDTH / 2, GAME_HEIGHT / 2 - 50);
     
     textSize(24);
     textStyle(NORMAL);
-    let loadingText = 'Initialisation des modèles IA:\n';
-    loadingText += modelsLoaded.handPose ? '✓ HandPose chargé' : '⏳ HandPose en cours...';
+    fill(232, 220, 196); // Couleur beige du thème
+    let loadingText = 'AI Models Initialization:\n';
+    loadingText += modelsLoaded.handPose ? '✓ HandPose loaded' : '⏳ HandPose loading...';
     loadingText += '\n';
-    loadingText += modelsLoaded.bodyPose ? '✓ BodyPose chargé' : '⏳ BodyPose en cours...';
+    loadingText += modelsLoaded.bodyPose ? '✓ BodyPose loaded' : '⏳ BodyPose loading...';
     
     text(loadingText, GAME_WIDTH / 2, GAME_HEIGHT / 2 + 50);
     
-    // Animation de chargement
+    // Animation de chargement dorée
     let dotCount = floor((frameCount / 30) % 4);
     let dots = '.'.repeat(dotCount);
     textSize(32);
+    fill(212, 175, 55); // Couleur dorée
     text(dots, GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150);
+}
+
+// Afficher un overlay de chargement dans le menu
+function displayLoadingOverlay() {
+    push();
+    // Fond semi-transparent
+    fill(26, 20, 16, 200);
+    rect(GAME_WIDTH / 2 - 300, GAME_HEIGHT - 150, 600, 100);
+    
+    // Bordure dorée
+    noFill();
+    stroke(212, 175, 55);
+    strokeWeight(2);
+    rect(GAME_WIDTH / 2 - 300, GAME_HEIGHT - 150, 600, 100);
+    
+    // Texte de chargement
+    fill(232, 220, 196);
+    noStroke();
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    let loadingText = modelsLoaded.handPose && modelsLoaded.bodyPose ? '✓ AI Ready!' : '⏳ Loading AI models...';
+    text(loadingText, GAME_WIDTH / 2, GAME_HEIGHT - 100);
+    pop();
 }

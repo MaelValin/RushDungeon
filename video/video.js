@@ -71,17 +71,17 @@ function drawVideo() {
     
     background(20, 20, 40);
     
-    // Taille de la vidéo miniature en haut à droite
+    // Taille de la vidéo miniature en haut à gauche
     let miniVideoW = 300;
     let miniVideoH = 169; // 16:9 ratio
-    let miniVideoX = GAME_WIDTH - miniVideoW - 20; // 20px de marge à droite
-    let miniVideoY = 20; // 20px de marge en haut
+    let miniVideoX = -150; // Collé au bord gauche
+    let miniVideoY = 75; // Collé au bord haut
     
     // Échelle pour les keypoints (plein canvas)
     let scaleX = GAME_WIDTH / 1280;
     let scaleY = GAME_HEIGHT / 720;
     
-    // Dessiner la vidéo miniature en haut à droite
+    // Dessiner la vidéo miniature en haut à gauche
     push();
     // Retourner horizontalement pour effet miroir
     translate(miniVideoX + miniVideoW, miniVideoY);

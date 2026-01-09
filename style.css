@@ -13,28 +13,33 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 #modeToggle {
-  position: fixed;
-  top: 20px;
+  position: absolute;
+  bottom: 20px;
   right: 20px;
   padding: 15px 30px;
   font-size: 16px;
   font-weight: bold;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
+  background: linear-gradient(135deg, rgba(60, 35, 20, 0.9), rgba(80, 45, 25, 0.9));
+  color: #e8dcc4;
+  border: 2px solid #d4af37;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(255, 140, 0, 0.1);
   transition: all 0.3s ease;
   z-index: 1000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 #modeToggle:hover {
+  background: linear-gradient(135deg, rgba(80, 45, 25, 0.95), rgba(100, 55, 30, 0.95));
+  border-color: #ff8c00;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 5px 25px rgba(255, 140, 0, 0.5), inset 0 0 15px rgba(255, 140, 0, 0.2);
 }
 
 #modeToggle:active {
