@@ -1,6 +1,7 @@
 let player;
 let currentLane = 1;
 let readyToJump = true;
+let soundSwitch, soundJump;
 
 function initPlayer() {
   player = new Sprite();
@@ -10,6 +11,10 @@ function initPlayer() {
   player.rotationLock = true;
   player.visible = false;
   player.layer = 10;
+  
+  // Charger les sons
+  soundSwitch = loadSound('sound/switchRightLeft.mp3');
+  soundJump = loadSound('sound/jump.mp3');
   
   // Load run animations
   player.addAni("run", "player/player-spritesheet.png", {
@@ -35,6 +40,8 @@ function initPlayer() {
 function updatePlayer() {
   player.y = GAME_HEIGHT - 200;
   player.layer = 10;
+  
+  let previousLane = currentLane;
 
   let handPos = getHandPosition();
   let bodyPos = getBodyPosition();
@@ -46,6 +53,7 @@ function updatePlayer() {
     if (isHandClosed() && readyToJump) {
       readyToJump = false;
       playerVz = JUMP_FORCE;
+      soundJump.play();
     }  } else if (bodyPos !== null) {
     currentLane = floor(bodyPos * NUM_LANES);
     currentLane = constrain(currentLane, 0, NUM_LANES - 1);
@@ -68,6 +76,11 @@ function updatePlayer() {
       wasRightPressed = false;
     }
   }
+  
+  // Jouer le son si la lane a changé
+  if (currentLane !== previousLane) {
+    soundSwitch.play();
+  }
 
   let targetX = getLaneX(currentLane, player.y);
   player.x = lerp(player.x, targetX, 0.2);
@@ -84,6 +97,7 @@ function updatePlayer() {
     if (readyToJump) {
       readyToJump = false;
       playerVz = JUMP_FORCE;
+      soundJump.play();
     }
   }
 
