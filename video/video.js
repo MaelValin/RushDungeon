@@ -18,14 +18,26 @@ function initVideo() {
         video.elt.style.display = 'none';
     }
     
-    // Charger la vidéo de fond
-    backgroundVideo = createVideo('assets/fond.mp4');
-    if (backgroundVideo && backgroundVideo.elt) {
-        backgroundVideo.elt.loop = true;
-        backgroundVideo.elt.volume = 0;
-        backgroundVideo.elt.muted = true;
-        backgroundVideo.elt.style.display = 'none';
-    }
+    // Charger la vidéo de fond avec un élément HTML natif
+    let videoElt = document.createElement('video');
+    videoElt.src = 'assets/fond.mp4';
+    videoElt.loop = true;
+    videoElt.volume = 0;
+    videoElt.muted = true;
+    videoElt.autoplay = true;
+    videoElt.style.display = 'none';
+    videoElt.setAttribute('playsinline', '');
+    document.body.appendChild(videoElt);
+    
+    // Créer un wrapper compatible avec p5/q5
+    backgroundVideo = {
+        elt: videoElt,
+        loadedmetadata: false
+    };
+    
+    videoElt.addEventListener('loadedmetadata', () => {
+        backgroundVideo.loadedmetadata = true;
+    });
     
     // Initialiser le bouton avec le mode actuel
     const btn = document.getElementById('modeToggle');
