@@ -11,7 +11,7 @@ function initPlayer() {
   player.rotation = 0;
   player.rotationLock = true;
   player.visible = false;
-  player.layer = 10;
+  player.layer = 100;
   
   // Charger les sons
   soundSwitch = loadSound('assets/switchRightLeft.mp3');

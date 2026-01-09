@@ -40,8 +40,8 @@ function initObstacles() {
 
     //chatger l'animation de l'épée
     epeeAni = loadAni('./assets/épée.png', {
-        width: 800,
-        height: 800,
+        width: 228,
+        height: 273,
         frames: 4
     });
     
@@ -49,37 +49,37 @@ function initObstacles() {
     arbreImages[0] = loadImage('./assets/arbre1.png');
     arbreImages[1] = loadImage('./assets/arbre2.png');
     arbreImages[2] = loadImage('./assets/arbre3.png');
+
+    pierreImage = loadImage('./assets/pierre.png');
+    épéeImage = loadImage('./assets/épée.png');
     
    // Groupes d'obstacles - Carrés rouges au sol
     obstacles1 = new obstacles.Group();
-    obstacles1.color = 'red';
     obstacles1.collider = 'kinematic';
     obstacles1.type = 1;
-    obstacles1.layer = 10;
-    obstacles1.debug = true; // Afficher le contour
+    obstacles1.layer = 1;
+    obstacles1.debug = false; // Ne pas afficher le contour
     
     // Ronds bleus en l'air (corbeaux)
     obstacles2 = new obstacles.Group();
     obstacles2.collider = 'kinematic';
     obstacles2.type = 2;
     obstacles2.layer = 20;
-    obstacles2.debug = true; // Afficher le contour
+    obstacles2.debug = false; // Ne pas afficher le contour
     
     // Rectangles verts (ni haut ni bas)
     obstacles3 = new obstacles.Group();
-    obstacles3.color = 'green';
     obstacles3.collider = 'kinematic';
     obstacles3.type = 3;
-    obstacles3.layer = 10;
-    obstacles3.debug = true; // Afficher le contour
+    obstacles3.layer = 1;
+    obstacles3.debug = false; // Ne pas afficher le contour
 
     // Bonus (étoile jaune/dorée)
     obstacles4 = new obstacles.Group();
-    obstacles4.color = 'gold';
     obstacles4.collider = 'kinematic';
     obstacles4.type = 4;
     obstacles4.layer = 10;
-    obstacles4.debug = true; // Afficher le contour
+    obstacles4.debug = false; // Afficher le contour
     
     
     }
@@ -102,14 +102,20 @@ function spawnRandomObstacle() {
 function spawnObstacle1(lane) {
     // Carré rouge au sol (on peut sauter ou esquiver)
     let obstacle = new obstacles1.Sprite();
-    obstacle.scale = 1.8;
     
     obstacle.x = getLaneX(lane, PERSPECTIVE_START_Y);
     obstacle.y = PERSPECTIVE_START_Y;
     obstacle.lane = lane;
-    obstacle.color = 'red';
     obstacle.type = 1;
     obstacle.layer = 10; // Derrière le joueur
+    obstacle.collider = 'kinematic'; // Assurer la collision
+   
+        // Pierre - plus petite
+        obstacle.img = pierreImage;
+        obstacle.isPierre = true;
+        obstacle.width = obstacle1Width * 0.2; // Pierre 50% plus petite
+        obstacle.height = obstacle1Height * 0.2;
+   
 }
 
 function spawnObstacle2(lane) {
@@ -120,6 +126,7 @@ function spawnObstacle2(lane) {
     obstacle.lane = lane;
     obstacle.type = 2;
     obstacle.layer = 20; // Au-dessus du joueur
+    obstacle.collider = 'kinematic'; // Assurer la collision
     obstacle.addAni('fly', corbeauAni);
     obstacle.changeAni('fly');
     obstacle.ani.frameDelay = 8; // Vitesse de l'animation
@@ -136,6 +143,7 @@ function spawnObstacle3(lane) {
     obstacle.lane = lane;
     obstacle.type = 3;
     obstacle.layer = 10; // Derrière le joueur
+    obstacle.collider = 'kinematic'; // Assurer la collision
     
     // Choisir un arbre aléatoire parmi les 3
     let randomArbre = floor(random(3));
@@ -156,6 +164,14 @@ function spawnObstacle4(lane) {
     obstacle.color = 'gold';
     obstacle.width = obstacle4Width;
     obstacle.height = obstacle4Height;
+
+     obstacle.addAni('sword', epeeAni);
+        obstacle.changeAni('sword');
+        obstacle.ani.frameDelay = 8;
+        obstacle.isPierre = false;
+        obstacle.width = obstacle1Width*2.5;
+        obstacle.height = obstacle1Height*2.5;
+        obstacle.ani.scale = 2.5;
 }
 
 function moveObstacles() {
@@ -174,8 +190,13 @@ function moveObstacles() {
         let scale = lerp(0.5, 1, progress);
         
         if (obs.type === 1) {
-            obs.width = obstacle1Width * scale;
-            obs.height = obstacle1Height * scale;
+            if (obs.isPierre) {
+                obs.width = obstacle1Width * 0.5 * scale; // Pierre 50% plus petite
+                obs.height = obstacle1Height * 0.5 * scale;
+            } else {
+                obs.width = obstacle1Width * scale;
+                obs.height = obstacle1Height * scale;
+            }
         } else if (obs.type === 2) {
             // Pour le corbeau, ajuster la taille du sprite avec l'effet 3D
             obs.w = obstacle2Width * scale;
