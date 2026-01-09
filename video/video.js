@@ -13,7 +13,7 @@ let poseDetected = false;
 let currentMode = localStorage.getItem('gameMode') || 'hand';
 
 function initVideo() {
-    video = createCapture(VIDEO);
+    video = createCapture('video');
     video.size(1280, 720);
     video.hide();
     
