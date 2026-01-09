@@ -16,6 +16,7 @@ let modelsLoaded = {
     bodyPose: false
 };
 
+let uiswordImage;
 // Variable pour la musique de fond
 let backgroundMusic;
 
@@ -48,6 +49,9 @@ function setup() {
     initObstacles();
     initMenu(); // Charger le logo
     initMusic(); // Démarre la musique
+    
+    // Charger l'icône d'épée
+    uiswordImage = loadImage('assets/UIépée.png');
     
     const modeBtn = document.getElementById('modeToggle');
     modeBtn.addEventListener('click', (e) => {
@@ -143,6 +147,14 @@ function displayScore() {
     textStyle(NORMAL);
     textAlign(LEFT, TOP);
     text(`Score: ${floor(score)}`, 10, 185); // En dessous de la caméra (169px + 16px de marge)
+
+    // Afficher l'icône d'épée si le joueur en possède une
+    if (hasWeapon && uiswordImage) {
+        push();
+        imageMode(CORNER);
+        image(uiswordImage, 10, 215, 40, 40); // En dessous du score
+        pop();
+    }
 }
 
 function displayUI() {
