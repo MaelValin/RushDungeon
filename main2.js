@@ -64,6 +64,8 @@ function setup() {
 }
 
 function draw() {
+    const modeBtn = document.getElementById('modeToggle');
+    
     if (gameState === 'menu') {
         background(20, 20, 40);
         drawRoad();
@@ -74,6 +76,9 @@ function draw() {
         if (!areModelsLoaded()) {
             displayLoadingOverlay();
         }
+        
+        // Activer le bouton dans le menu
+        if (modeBtn) modeBtn.disabled = false;
     }
     
     else if (gameState === 'loading') {
@@ -95,6 +100,9 @@ function draw() {
         drawRoad();
         // Afficher le menu de fin de jeu
         displayMenuEnd();
+        
+        // Activer le bouton dans le menu gameover
+        if (modeBtn) modeBtn.disabled = false;
     }
     
     
@@ -111,7 +119,7 @@ function draw() {
     
         // Système de difficulté progressive - réduire l'intervalle de spawn
         // Score 100 = intervalle 70, Score 500 = intervalle 50, Score 1000 = intervalle 35, etc.
-        spawnInterval = max(30, 80 - floor(score / 100) * 2); // Min 30 frames, réduit de 2 frames tous les 100 points
+        spawnInterval = max(30, 80 - floor(score / 100) * 10); // Min 30 frames, réduit de 10 frames tous les 100 points
         
         if (frameCount - lastSpawnFrame >= spawnInterval) {
             spawnRandomObstacle();
@@ -119,12 +127,14 @@ function draw() {
         }
     
         score += 0.1;
+
         
         displayUI();
+        
+        // Désactiver le bouton pendant le jeu
+        if (modeBtn) modeBtn.disabled = true;
     }
 }
-
-
 
 function displayScore() {
     fill(255);
