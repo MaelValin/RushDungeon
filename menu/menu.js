@@ -45,6 +45,9 @@ function StartGame() {
     lastSpawnFrame = 0; // Réinitialiser le dernier frame de spawn
     obstacles.removeAll();
     currentLane = 1;
+    hasWeapon = false; // Réinitialiser l'épée
+    playerZ = 0; // Réinitialiser la hauteur du saut
+    playerVz = 0; // Réinitialiser la vélocité
     player.x = getLaneX(currentLane, player.y);
     player.y = GAME_HEIGHT - 400;
 }
@@ -78,6 +81,9 @@ function EndGame(){
     gameState = 'gameover';
     player.visible = false;
     obstacles.removeAll();
+    
+    // Jouer le son de mort
+    if (soundDeath) soundDeath.play();
     
     // Sauvegarder le mode actuel dans localStorage
     localStorage.setItem('gameMode', currentMode);
