@@ -29,7 +29,7 @@ const JUMP_FORCE = 20; // Force du saut initial (réduit pour sauter moins haut)
 
 // Fonction pour initialiser et jouer la musique en boucle
 function initMusic() {
-    backgroundMusic = new Audio('assets/f4e2611a-6871-485a-9738-c1c7746db9e0.wav');
+    backgroundMusic = new Audio('assets/ThemePrincipal.mp3');
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.25;
     backgroundMusic.play().catch(err => {
