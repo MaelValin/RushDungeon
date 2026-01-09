@@ -1,6 +1,5 @@
 // VERSION AVEC DETECTION DE LA MAIN (active)
 let video;
-let backgroundVideo; // Vidéo de fond du jeu
 let handPose;
 let hands = [];
 let handDetected = false;
@@ -13,30 +12,24 @@ let poseDetected = false;
 let currentMode = localStorage.getItem('gameMode') || 'hand';
 
 function initVideo() {
-    video = createCapture({video: true});
-    if (video && video.elt) {
-        video.elt.style.display = 'none';
-    }
+    // Créer l'élément vidéo HTML natif
+    video = document.createElement('video');
+    video.width = 1280;
+    video.height = 720;
+    video.style.display = 'none';
+    document.body.appendChild(video);
     
-    // Charger la vidéo de fond avec un élément HTML natif
-    let videoElt = document.createElement('video');
-    videoElt.src = 'assets/fond.mp4';
-    videoElt.loop = true;
-    videoElt.volume = 0;
-    videoElt.muted = true;
-    videoElt.autoplay = true;
-    videoElt.style.display = 'none';
-    videoElt.setAttribute('playsinline', '');
-    document.body.appendChild(videoElt);
-    
-    // Créer un wrapper compatible avec p5/q5
-    backgroundVideo = {
-        elt: videoElt,
-        loadedmetadata: false
-    };
-    
-    videoElt.addEventListener('loadedmetadata', () => {
-        backgroundVideo.loadedmetadata = true;
+    // Obtenir l'accès à la caméra
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            width: 1280,
+            height: 720
+        }
+    }).then(stream => {
+        video.srcObject = stream;
+        video.play();
+    }).catch(err => {
+        console.error('Erreur d\'accès à la caméra:', err);
     });
     
     // Initialiser le bouton avec le mode actuel
@@ -76,44 +69,35 @@ function switchMode() {
 function drawVideo() {
     if (!video) return;
     
-    // Dessiner d'abord la vidéo de fond
-    if (backgroundVideo && backgroundVideo.loadedmetadata) {
-        push();
-        image(backgroundVideo, 0, 0, GAME_WIDTH, GAME_HEIGHT);
-        pop();
-    } else {
-        background(20, 20, 40);
-    }
+    background(20, 20, 40);
     
-    let videoAspect = 1280 / 720;
-    let canvasAspect = GAME_WIDTH / GAME_HEIGHT;
-    let videoScale, videoW, videoH, offsetX, offsetY;
+    // Taille de la vidéo miniature en haut à droite
+    let miniVideoW = 300;
+    let miniVideoH = 169; // 16:9 ratio
+    let miniVideoX = GAME_WIDTH - miniVideoW - 20; // 20px de marge à droite
+    let miniVideoY = 20; // 20px de marge en haut
     
-    if (canvasAspect > videoAspect) {
-        videoH = GAME_HEIGHT;
-        videoW = videoH * videoAspect;
-        offsetX = (GAME_WIDTH - videoW) / 2;
-        offsetY = 0;
-    } else {
-        videoW = GAME_WIDTH;
-        videoH = videoW / videoAspect;
-        offsetX = 0;
-        offsetY = (GAME_HEIGHT - videoH) / 2;
-    }
+    // Échelle pour les keypoints (plein canvas)
+    let scaleX = GAME_WIDTH / 1280;
+    let scaleY = GAME_HEIGHT / 720;
     
-    videoScale = videoW / 1280;
-    
+    // Dessiner la vidéo miniature en haut à droite
     push();
-    image(video, offsetX, offsetY, videoW, videoH);
+    // Retourner horizontalement pour effet miroir
+    translate(miniVideoX + miniVideoW, miniVideoY);
+    scale(-1, 1);
+    image(video, 0, 0, miniVideoW, miniVideoH);
     pop();
     
+    // Dessiner les keypoints sur tout le canvas
     if (currentMode === 'hand' && handDetected && hands.length > 0) {
         for (let hand of hands) {
             for (let keypoint of hand.keypoints) {
                 fill(0, 255, 0);
                 noStroke();
-                let scaledX = offsetX + (keypoint.x * videoScale);
-                let scaledY = offsetY + (keypoint.y * videoScale);
+                // Inverser X pour correspondre à la vidéo miroir
+                let scaledX = GAME_WIDTH - (keypoint.x * scaleX);
+                let scaledY = keypoint.y * scaleY;
                 circle(scaledX, scaledY, 10);
             }
         }
@@ -124,8 +108,9 @@ function drawVideo() {
             for (let keypoint of pose.keypoints) {
                 fill(255, 0, 255);
                 noStroke();
-                let scaledX = offsetX + (keypoint.x * videoScale);
-                let scaledY = offsetY + (keypoint.y * videoScale);
+                // Inverser X pour correspondre à la vidéo miroir
+                let scaledX = GAME_WIDTH - (keypoint.x * scaleX);
+                let scaledY = keypoint.y * scaleY;
                 circle(scaledX, scaledY, 10);
             }
         }
@@ -140,7 +125,8 @@ function getHandPosition() {
     
     if (wrist) {
         let handX = wrist.x;
-        let normalizedX = handX / 1280;
+        // Inverser X pour effet miroir
+        let normalizedX = 1 - (handX / 1280);
         return normalizedX;
     }
     return null;
@@ -156,7 +142,8 @@ function getBodyPosition() {
     
     if (leftHip && rightHip && leftHip.confidence > 0.1 && rightHip.confidence > 0.1) {
         let centerX = (leftHip.x + rightHip.x) / 2;
-        let normalizedX = centerX / 1280;
+        // Inverser X pour effet miroir
+        let normalizedX = 1 - (centerX / 1280);
         return normalizedX;
     }
     return null;
