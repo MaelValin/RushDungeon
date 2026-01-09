@@ -14,7 +14,10 @@ function initMenu() {
 function keyPressed() {
     if (key === ' ') { // ESPACE
         if (gameState === 'menu') {
-            StartGame();
+            // Vérifier si les modèles IA sont chargés avant de démarrer
+            if (areModelsLoaded()) {
+                StartGame();
+            }
         } else if (gameState === 'gameover') {
             StartGame();
         }
@@ -31,6 +34,11 @@ function keyPressed() {
 }
 
 function StartGame() {
+    // Ne démarrer que si les modèles sont chargés
+    if (!areModelsLoaded()) {
+        return;
+    }
+    
     gameState = 'playing';
     score = 0;
     spawnInterval = 80; // Réinitialiser l'intervalle de spawn
