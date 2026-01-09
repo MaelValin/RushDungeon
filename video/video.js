@@ -14,14 +14,18 @@ let currentMode = localStorage.getItem('gameMode') || 'hand';
 
 function initVideo() {
     video = createCapture({video: true});
-    video.hide();
+    if (video && video.elt) {
+        video.elt.style.display = 'none';
+    }
     
     // Charger la vidéo de fond
     backgroundVideo = createVideo('assets/fond.mp4');
-    backgroundVideo.elt.loop = true;
-    backgroundVideo.elt.volume = 0;
-    backgroundVideo.elt.muted = true;
-    backgroundVideo.hide();
+    if (backgroundVideo && backgroundVideo.elt) {
+        backgroundVideo.elt.loop = true;
+        backgroundVideo.elt.volume = 0;
+        backgroundVideo.elt.muted = true;
+        backgroundVideo.elt.style.display = 'none';
+    }
     
     // Initialiser le bouton avec le mode actuel
     const btn = document.getElementById('modeToggle');
