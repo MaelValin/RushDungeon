@@ -183,6 +183,10 @@ function modelLoaded() {
 - **Spawn Rate**: New obstacle every 80 frames (~1.3s at 60fps)
 - **Collision**: Not yet implemented (TODO)
 
+
+## Site Web
+https://maelvalin.github.io/RushDungeon/
+
 ## 📝 License
 
 CC0 - Public Domain
