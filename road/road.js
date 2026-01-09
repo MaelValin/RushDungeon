@@ -1,9 +1,48 @@
+let backgroundImage;
+let isGifBackground = false;
+
+function initRoad() {
+    // Pour un GIF animé, créer un élément HTML
+    let imageFile = 'assets/fond.gif'; // Changez l'extension selon votre fichier
+    
+    if (imageFile.endsWith('.gif')) {
+        // Créer l'élément img directement en HTML
+        backgroundImage = document.createElement('img');
+        backgroundImage.src = imageFile;
+        backgroundImage.style.position = 'fixed';
+        backgroundImage.style.top = '50%';
+        backgroundImage.style.left = '50%';
+        backgroundImage.style.transform = 'translate(-50%, -50%)';
+        backgroundImage.style.width = GAME_WIDTH + 'px';
+        backgroundImage.style.height = GAME_HEIGHT + 'px';
+        backgroundImage.style.objectFit = 'cover';
+        backgroundImage.style.zIndex = '0'; // GIF derrière le canvas
+        backgroundImage.style.opacity = '1'; // Opacité complète pour mieux voir
+        backgroundImage.style.pointerEvents = 'none'; // Ne bloque pas les clics
+        document.body.appendChild(backgroundImage);
+        isGifBackground = true;
+    } else {
+        // Pour une image statique (jpg, png)
+        backgroundImage = loadImage(imageFile);
+        isGifBackground = false;
+    }
+}
+
 function drawRoad() {
+    // Dessiner l'image de fond (seulement si ce n'est pas un GIF)
+    if (backgroundImage && !isGifBackground) {
+        image(backgroundImage, 0, 0, GAME_WIDTH, GAME_HEIGHT);
+    }
+    // Si c'est un GIF, il est déjà affiché en HTML
+    
+    // Décor désactivé - mettre une image de fond à la place
     push();
     noStroke();
     
     // Appliquer l'opacité si le jeu est lancé et la caméra active
     let opacity = (gameState === 'playing' && video) ? 0.8 : 1.0;
+    
+    
     
     // Dessiner les murs noirs sur les côtés
     fill(20, 20, 30, 255 * opacity);
@@ -31,9 +70,9 @@ function drawRoad() {
     endShape(CLOSE);
     
     // Mur du fond (horizontal en haut)
-fill(15, 15, 25, 255 * opacity); // Couleur légèrement différente
-rect(topLeftX, 0, topRightX - topLeftX, PERSPECTIVE_START_Y);
-
+    fill(15, 15, 25, 255 * opacity); // Couleur légèrement différente
+    rect(topLeftX, 0, topRightX - topLeftX, PERSPECTIVE_START_Y);
+    
     // Dessiner la route
     for (let y = PERSPECTIVE_START_Y; y < GAME_HEIGHT; y += 5) {
         let progress = (y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
