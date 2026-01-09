@@ -115,8 +115,12 @@ function getCurrentLane() {
 function checkObstacleCollisions() {
   // Vérifier les collisions avec les bonus (type 4)
   for (let bonus of obstacles4) {
-    if (player.collides(bonus)) {
+    let distance = dist(player.x, player.y, bonus.x, bonus.y);
+    let collisionRadius = (player.width + bonus.width) / 2 + 20; // +20 pour augmenter la zone de détection
+    
+    if (distance < collisionRadius) {
       hasWeapon = true;
+      console.log("Épée obtenue! Distance:", distance, "Rayon:", collisionRadius);
       bonus.remove();
     }
   }
@@ -125,7 +129,11 @@ function checkObstacleCollisions() {
   if (hasWeapon) {
     // Vérifier type 1
     for (let obs of obstacles1) {
-      if (player.collides(obs)) {
+      let distance = dist(player.x, player.y, obs.x, obs.y);
+      let collisionRadius = (player.width + obs.width) / 2 + 20;
+      
+      if (distance < collisionRadius) {
+        console.log("Obstacle type 1 détruit! Distance:", distance, "Rayon:", collisionRadius);
         obs.remove();
         hasWeapon = false;
       }
@@ -133,7 +141,11 @@ function checkObstacleCollisions() {
     
     // Vérifier type 2
     for (let obs of obstacles2) {
-      if (player.collides(obs)) {
+      let distance = dist(player.x, player.y, obs.x, obs.y);
+      let collisionRadius = (player.width + obs.w) / 2 + 20;
+      
+      if (distance < collisionRadius) {
+        console.log("Obstacle type 2 détruit! Distance:", distance, "Rayon:", collisionRadius);
         obs.remove();
         hasWeapon = false;
       }
@@ -141,7 +153,11 @@ function checkObstacleCollisions() {
     
     // Vérifier type 3
     for (let obs of obstacles3) {
-      if (player.collides(obs)) {
+      let distance = dist(player.x, player.y, obs.x, obs.y);
+      let collisionRadius = (player.width + obs.width) / 2 + 20;
+      
+      if (distance < collisionRadius) {
+        console.log("Obstacle type 3 détruit! Distance:", distance, "Rayon:", collisionRadius);
         obs.remove();
         hasWeapon = false;
       }
