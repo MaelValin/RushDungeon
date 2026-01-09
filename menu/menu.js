@@ -11,6 +11,8 @@ function keyPressed() {
         if (gameState === 'gameover') {
             gameState = 'menu';
             score = 0;
+            spawnInterval = 80; // Réinitialiser l'intervalle de spawn
+            lastSpawnFrame = 0; // Réinitialiser le dernier frame de spawn
         }
     }
 }
@@ -18,6 +20,8 @@ function keyPressed() {
 function StartGame() {
     gameState = 'playing';
     score = 0;
+    spawnInterval = 80; // Réinitialiser l'intervalle de spawn
+    lastSpawnFrame = 0; // Réinitialiser le dernier frame de spawn
     obstacles.removeAll();
     currentLane = 1;
     player.x = getLaneX(currentLane, player.y);
