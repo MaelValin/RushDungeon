@@ -111,7 +111,7 @@ function draw() {
     
         // Système de difficulté progressive - réduire l'intervalle de spawn
         // Score 100 = intervalle 70, Score 500 = intervalle 50, Score 1000 = intervalle 35, etc.
-        spawnInterval = max(30, 80 - floor(score / 100) * 2); // Min 30 frames, réduit de 2 frames tous les 100 points
+        spawnInterval = max(30, 80 - floor(score / 100) * 10); // Min 30 frames, réduit de 10 frames tous les 100 points
         
         if (frameCount - lastSpawnFrame >= spawnInterval) {
             spawnRandomObstacle();
@@ -119,6 +119,7 @@ function draw() {
         }
     
         score += 0.1;
+        
         
         displayUI();
     }

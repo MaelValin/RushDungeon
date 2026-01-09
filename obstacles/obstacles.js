@@ -86,16 +86,16 @@ function initObstacles() {
 
 function spawnRandomObstacle() {
     let lane = floor(random(NUM_LANES));
-    let obstacleType = floor(random(4)); // 0, 1, 2, ou 3
+    let obstacleType = floor(random(10)); // 0-9 pour varier les probabilités
     
-    if (obstacleType === 0) {
-        spawnObstacle1(lane); // Carré rouge au sol
-    } else if (obstacleType === 1) {
-        spawnObstacle2(lane); // Rond bleu en l'air
-    } else if (obstacleType === 2) {
-        spawnObstacle3(lane); // Rectangle vert moyen
+    if (obstacleType <= 2) {
+        spawnObstacle1(lane); // Pierre au sol - 30%
+    } else if (obstacleType <= 5) {
+        spawnObstacle2(lane); // Corbeau en l'air - 30%
+    } else if (obstacleType <= 8) {
+        spawnObstacle3(lane); // Arbre - 30%
     } else {
-        spawnObstacle4(lane); // Bonus doré
+        spawnObstacle4(lane); // Bonus épée - 10% (plus rare)
     }
 }
 
