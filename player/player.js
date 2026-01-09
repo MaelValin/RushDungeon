@@ -2,6 +2,7 @@ let player;
 let currentLane = 1;
 let readyToJump = true;
 let soundSwitch, soundJump;
+let hasWeapon = false;
 
 function initPlayer() {
   player = new Sprite();
@@ -101,11 +102,51 @@ function updatePlayer() {
     }
   }
 
+  // Gestion des collisions avec les obstacles
+  checkObstacleCollisions();
+
   jump();
 }
 
 function getCurrentLane() {
   return currentLane;
+}
+
+function checkObstacleCollisions() {
+  // Vérifier les collisions avec les bonus (type 4)
+  for (let bonus of obstacles4) {
+    if (player.collides(bonus)) {
+      hasWeapon = true;
+      bonus.remove();
+    }
+  }
+  
+  // Vérifier les collisions avec les autres obstacles
+  if (hasWeapon) {
+    // Vérifier type 1
+    for (let obs of obstacles1) {
+      if (player.collides(obs)) {
+        obs.remove();
+        hasWeapon = false;
+      }
+    }
+    
+    // Vérifier type 2
+    for (let obs of obstacles2) {
+      if (player.collides(obs)) {
+        obs.remove();
+        hasWeapon = false;
+      }
+    }
+    
+    // Vérifier type 3
+    for (let obs of obstacles3) {
+      if (player.collides(obs)) {
+        obs.remove();
+        hasWeapon = false;
+      }
+    }
+  }
 }
 
 function jump() {
