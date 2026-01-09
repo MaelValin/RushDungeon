@@ -1,3 +1,16 @@
+let logoImage;
+let chevalierImage
+let pierreImage;
+let arbreImage;
+
+function initMenu() {
+    logoImage = loadImage('./assets/Logo.png');
+    chevalierImage = loadImage('./assets/chevalier.png');
+    pierreImage = loadImage('./assets/pierre.png');
+    arbreImage = loadImage('./assets/arbre1.png');
+    arbremortImage = loadImage('./assets/arbre2.png');
+}
+
 function keyPressed() {
     if (key === ' ') { // ESPACE
         if (gameState === 'menu') {
@@ -72,26 +85,76 @@ function ResumeGame(){}
 function RestartGame(){}
 
 function displayMenuStart() {
-    // Afficher le titre
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(72);
-    textStyle(BOLD);
-    text('RushDungeon', GAME_WIDTH / 2, GAME_HEIGHT / 2 - 200);
+    // Afficher le logo au lieu du titre
+   
+
+    if(chevalierImage) {
+        imageMode(CENTER);
+        let chevalierWidth = 400;
+        let chevalierHeight = chevalierWidth * (chevalierImage.height / chevalierImage.width);
+        image(chevalierImage, GAME_WIDTH / 2-500, GAME_HEIGHT / 2 + 50, chevalierWidth, chevalierHeight);
+    }
+
+    if(arbreImage) {
+        imageMode(CENTER);
+        let arbreWidth = 1500;
+        let arbreHeight = arbreWidth * (arbreImage.height / arbreImage.width);
+        image(arbreImage, GAME_WIDTH / 2 + 500, GAME_HEIGHT / 2 - 100, arbreWidth, arbreHeight);
+    }
     
-    // Afficher les instructions
-    textSize(24);
+
+    if(pierreImage) {
+        imageMode(CENTER);
+        let pierreWidth = 300;
+        let pierreHeight = pierreWidth * (pierreImage.height / pierreImage.width);
+        image(pierreImage, GAME_WIDTH / 2 + 350, GAME_HEIGHT / 2 + 250, pierreWidth, pierreHeight);
+    }
+
+     if (logoImage) {
+        imageMode(CENTER);
+        let logoWidth = 800;
+        let logoHeight = logoWidth * (logoImage.height / logoImage.width);
+        image(logoImage, GAME_WIDTH / 2, GAME_HEIGHT / 2 -100, logoWidth, logoHeight);
+    }
+
+    
+    // Afficher les instructions avec effet de clignotement doux
+    textAlign(CENTER, CENTER);
+    textSize(48);
     textStyle(NORMAL);
-    fill(150, 200, 255);
-    text('Appuyez sur le bouton START pour commencer', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 100);
-    text('ou appuyez sur ESPACE', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 150);
+    
+    // Effet de clignotement doux avec une fonction sinusoïdale
+    let alpha = map(sin(frameCount * 5), -1, 1, 100, 255);
+    fill(255, 255, 255, alpha);
+    
+    text('ESPACE', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 250);
 }
 
 function displayMenuEnd() {
+
+    if(pierreImage) {
+        imageMode(CENTER);
+        let pierreWidth = 300;
+        let pierreHeight = pierreWidth * (pierreImage.height / pierreImage.width);
+        image(pierreImage, GAME_WIDTH / 2 + 450, GAME_HEIGHT / 2 + 250, pierreWidth, pierreHeight);
+    }
+    if(pierreImage) {
+        imageMode(CENTER);
+        let pierreWidth = 200;
+        let pierreHeight = pierreWidth * (pierreImage.height / pierreImage.width);
+        image(pierreImage, GAME_WIDTH / 2 + 280, GAME_HEIGHT / 2 + 300, pierreWidth, pierreHeight);
+    }
+
+    if(arbremortImage) {
+        imageMode(CENTER);
+        let arbremortWidth = 400;
+        let arbremortHeight = arbremortWidth * (arbremortImage.height / arbremortImage.width);
+        image(arbremortImage, GAME_WIDTH / 2 - 200, GAME_HEIGHT / 2 - 300, arbremortWidth, arbremortHeight);
+    }
     // Afficher le titre
     fill(255);
     textAlign(CENTER, CENTER);
-    textSize(72);
+    textSize(200);
     textStyle(BOLD);
     text('GAME OVER', GAME_WIDTH / 2, GAME_HEIGHT / 2 - 200);
     
@@ -100,9 +163,9 @@ function displayMenuEnd() {
     fill(200, 200, 100);
     text(`Score: ${floor(score)}`, GAME_WIDTH / 2, GAME_HEIGHT / 2 - 50);
     
-    // Afficher les instructions
-    textSize(24);
-    fill(150, 200, 255);
-    text('Appuyez sur ESPACE pour rejouer', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 80);
-    text('ou appuyez sur M pour retour au menu', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 130);
+    // Effet de clignotement doux avec une fonction sinusoïdale
+    let alpha = map(sin(frameCount * 5), -1, 1, 100, 255);
+    fill(255, 255, 255, alpha);
+    
+    text('ESPACE', GAME_WIDTH / 2, GAME_HEIGHT / 2 + 250);
 }
