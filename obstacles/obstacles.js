@@ -41,7 +41,7 @@ function initObstacles() {
     obstacles1.color = 'red';
     obstacles1.collider = 'kinematic';
     obstacles1.type = 1;
-    obstacles1.layer = 0;
+    obstacles1.layer = 10;
     obstacles1.debug = true; // Afficher le contour
     
     // Ronds bleus en l'air (corbeaux)
@@ -56,7 +56,7 @@ function initObstacles() {
     obstacles3.color = 'green';
     obstacles3.collider = 'kinematic';
     obstacles3.type = 3;
-    obstacles3.layer = 0;
+    obstacles3.layer = 10;
     obstacles3.debug = true; // Afficher le contour
 
     
@@ -86,7 +86,7 @@ function spawnObstacle1(lane) {
     obstacle.lane = lane;
     obstacle.color = 'red';
     obstacle.type = 1;
-    obstacle.layer = 0; // Derrière le joueur
+    obstacle.layer = 10; // Derrière le joueur
 }
 
 function spawnObstacle2(lane) {
@@ -112,7 +112,7 @@ function spawnObstacle3(lane) {
     obstacle.y = PERSPECTIVE_START_Y;
     obstacle.lane = lane;
     obstacle.type = 3;
-    obstacle.layer = 0; // Derrière le joueur
+    obstacle.layer = 10; // Derrière le joueur
     
     // Choisir un arbre aléatoire parmi les 3
     let randomArbre = floor(random(3));
