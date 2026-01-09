@@ -14,8 +14,8 @@ function initPlayer() {
   player.layer = 10;
   
   // Charger les sons
-  soundSwitch = loadSound('sound/switchRightLeft.mp3');
-  soundJump = loadSound('sound/jump.mp3');
+  soundSwitch = loadSound('assets/switchRightLeft.mp3');
+  soundJump = loadSound('assets/jump.mp3');
   
   // Load run animations
   player.addAni("run", "player/player-spritesheet.png", {
