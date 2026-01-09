@@ -74,6 +74,9 @@ function EndGame(){
     player.visible = false;
     obstacles.removeAll();
     
+    // Jouer le son de mort
+    if (soundDeath) soundDeath.play();
+    
     // Sauvegarder le mode actuel dans localStorage
     localStorage.setItem('gameMode', currentMode);
 }

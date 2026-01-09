@@ -1,7 +1,7 @@
 let player;
 let currentLane = 1;
 let readyToJump = true;
-let soundSwitch, soundJump, soundBonus, soundKillMob;
+let soundSwitch, soundJump, soundBonus, soundKillMob, soundDeath;
 let hasWeapon = false;
 let wasLeftPressed = false;
 let wasRightPressed = false;
@@ -23,6 +23,7 @@ function initPlayer() {
   soundJump = loadSound('assets/jump.mp3');
   soundBonus = loadSound('assets/bonus.mp3');
   soundKillMob = loadSound('assets/killMob.mp3');
+  soundDeath = loadSound('assets/death.mp3');
   
   // Load run animations
   player.addAni("run", "player/player-spritesheet.png", {
