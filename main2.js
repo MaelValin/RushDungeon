@@ -31,7 +31,7 @@ const JUMP_FORCE = 20; // Force du saut initial (réduit pour sauter moins haut)
 function initMusic() {
     backgroundMusic = new Audio('assets/f4e2611a-6871-485a-9738-c1c7746db9e0.wav');
     backgroundMusic.loop = true;
-    backgroundMusic.volume = 0.5;
+    backgroundMusic.volume = 0.25;
     backgroundMusic.play().catch(err => {
         console.log("La musique nécessite une interaction utilisateur pour démarrer");
     });
