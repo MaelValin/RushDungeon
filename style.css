@@ -46,6 +46,12 @@ main {
   transform: translateY(0);
 }
 
+#modeToggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* Cacher la vidéo HTML, elle est gérée dans le canvas */
 #background-video {
   display: none;

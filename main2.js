@@ -64,6 +64,8 @@ function setup() {
 }
 
 function draw() {
+    const modeBtn = document.getElementById('modeToggle');
+    
     if (gameState === 'menu') {
         background(20, 20, 40);
         drawRoad();
@@ -74,6 +76,9 @@ function draw() {
         if (!areModelsLoaded()) {
             displayLoadingOverlay();
         }
+        
+        // Activer le bouton dans le menu
+        if (modeBtn) modeBtn.disabled = false;
     }
     
     else if (gameState === 'loading') {
@@ -95,6 +100,9 @@ function draw() {
         drawRoad();
         // Afficher le menu de fin de jeu
         displayMenuEnd();
+        
+        // Activer le bouton dans le menu gameover
+        if (modeBtn) modeBtn.disabled = false;
     }
     
     
@@ -119,13 +127,14 @@ function draw() {
         }
     
         score += 0.1;
-        
+
         
         displayUI();
+        
+        // Désactiver le bouton pendant le jeu
+        if (modeBtn) modeBtn.disabled = true;
     }
 }
-
-
 
 function displayScore() {
     fill(255);

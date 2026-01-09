@@ -132,26 +132,40 @@ function checkObstacleCollisions() {
         console.log("Épée obtenue!");
         if (soundBonus) soundBonus.play();
         bonus.remove();
+        return; // Sortir après avoir récupéré l'épée
       }
     }
   }
   
-  // Si on a une épée, chercher UN obstacle devant et le détruire
+  // Si on a une épée, chercher le premier obstacle dans la même lane et le détruire
   if (hasWeapon) {
     let allObstacles = [...obstacles1, ...obstacles2, ...obstacles3];
     
+    // Trouver l'obstacle le plus proche dans la même lane
+    let closestObstacle = null;
+    let closestDistance = Infinity;
+    
     for (let obs of allObstacles) {
-      // Vérifier si l'obstacle est devant (Y < player.Y)
-      if (obs.y < player.y) {
-        // Vérifier si l'obstacle est dans la même lane que le joueur
-        if (obs.lane === currentLane) {
-          console.log("Obstacle détruit!");
-          if (soundKillMob) soundKillMob.play();
-          obs.remove();
-          hasWeapon = false;
-          return; // Un seul obstacle détruit par frame
+      // Vérifier si l'obstacle est dans la même lane
+      if (obs.lane === currentLane) {
+        let distance = dist(player.x, player.y, obs.x, obs.y);
+        let collisionRadius = (player.width + obs.width) / 2 + 50;
+        
+        // Si on touche cet obstacle
+        if (distance < collisionRadius && distance < closestDistance) {
+          closestObstacle = obs;
+          closestDistance = distance;
         }
       }
+    }
+    
+    // Détruire l'obstacle le plus proche touché
+    if (closestObstacle) {
+      console.log("Obstacle détruit!");
+      if (soundKillMob) soundKillMob.play();
+      closestObstacle.remove();
+      hasWeapon = false;
+      return;
     }
   }
 }

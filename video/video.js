@@ -58,6 +58,11 @@ function initVideo() {
 }
 
 function switchMode() {
+    // Ne pas permettre le changement de mode pendant le jeu
+    if (gameState === 'playing') {
+        return;
+    }
+    
     currentMode = currentMode === 'hand' ? 'body' : 'hand';
     // Sauvegarder le mode dans localStorage
     localStorage.setItem('gameMode', currentMode);
