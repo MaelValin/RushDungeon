@@ -13,8 +13,9 @@ let poseDetected = false;
 let currentMode = localStorage.getItem('gameMode') || 'hand';
 
 function initVideo() {
-    video = createCapture('video');
-    video.size(1280, 720);
+    video = createCapture({video: {width: 1280, height: 720}});
+    video.elt.style.width = '1280px';
+    video.elt.style.height = '720px';
     video.hide();
     
     // Charger la vidéo de fond
