@@ -11,7 +11,7 @@ function initPlayer() {
   player.rotation = 0;
   player.rotationLock = true;
   player.visible = false;
-  player.layer = 100;
+  player.layer = 20;
   
   // Charger les sons
   soundSwitch = loadSound('assets/switchRightLeft.mp3');
@@ -40,7 +40,7 @@ function initPlayer() {
 
 function updatePlayer() {
   player.y = GAME_HEIGHT - 200;
-  player.layer = 10;
+  player.layer = 20; // Layer très élevé pour passer devant tout
   
   let previousLane = currentLane;
 

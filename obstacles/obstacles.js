@@ -64,7 +64,7 @@ function initObstacles() {
     obstacles2 = new obstacles.Group();
     obstacles2.collider = 'kinematic';
     obstacles2.type = 2;
-    obstacles2.layer = 20;
+    obstacles2.layer = 40;
     obstacles2.debug = false; // Ne pas afficher le contour
     
     // Rectangles verts (ni haut ni bas)
@@ -78,7 +78,7 @@ function initObstacles() {
     obstacles4 = new obstacles.Group();
     obstacles4.collider = 'kinematic';
     obstacles4.type = 4;
-    obstacles4.layer = 10;
+    obstacles4.layer = 1;
     obstacles4.debug = false; // Afficher le contour
     
     
@@ -113,8 +113,8 @@ function spawnObstacle1(lane) {
         // Pierre - plus petite
         obstacle.img = pierreImage;
         obstacle.isPierre = true;
-        obstacle.width = obstacle1Width * 0.2; // Pierre 50% plus petite
-        obstacle.height = obstacle1Height * 0.2;
+        obstacle.width = obstacle1Width * 0.1; // Pierre 50% plus petite
+        obstacle.height = obstacle1Height * 0.1;
    
 }
 
@@ -169,8 +169,8 @@ function spawnObstacle4(lane) {
         obstacle.changeAni('sword');
         obstacle.ani.frameDelay = 8;
         obstacle.isPierre = false;
-        obstacle.width = obstacle1Width*2.5;
-        obstacle.height = obstacle1Height*2.5;
+        obstacle.width = obstacle1Width*1.5;
+        obstacle.height = obstacle1Height*1.5;
         obstacle.ani.scale = 2.5;
 }
 
