@@ -8,6 +8,8 @@ const PERSPECTIVE_START_Y = 100;
 
 let gameSpeed = 5;
 let score = 0;
+let spawnInterval = 80; // Intervalle de spawn initial
+let lastSpawnFrame = 0; // Dernier frame où un obstacle a spawné
 let gameState = 'loading'; // 'loading', 'menu', 'playing', 'paused', 'gameover'
 let modelsLoaded = {
     handPose: false,
@@ -101,8 +103,13 @@ function draw() {
 
         moveObstacles();
     
-        if (frameCount % 80 === 0) {
+        // Système de difficulté progressive - réduire l'intervalle de spawn
+        // Score 100 = intervalle 70, Score 500 = intervalle 50, Score 1000 = intervalle 35, etc.
+        spawnInterval = max(30, 80 - floor(score / 100) * 2); // Min 30 frames, réduit de 2 frames tous les 100 points
+        
+        if (frameCount - lastSpawnFrame >= spawnInterval) {
             spawnRandomObstacle();
+            lastSpawnFrame = frameCount;
         }
     
         score += 0.1;

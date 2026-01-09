@@ -44,8 +44,9 @@ function drawRoad() {
     
     
     
-    // Dessiner les murs noirs sur les côtés
-    fill(20, 20, 30, 255 * opacity);
+    // Dessiner les murs du donjon avec des tons chauds
+    let murColor = color(40, 25, 18); // Marron foncé du site
+    fill(murColor.levels[0], murColor.levels[1], murColor.levels[2], 255 * opacity);
     
     // Mur gauche - s'étend de tout en haut de l'écran
     let topLeftX = GAME_WIDTH / 2 - (LANE_WIDTH_TOP * NUM_LANES) / 2;
@@ -69,20 +70,22 @@ function drawRoad() {
     vertex(GAME_WIDTH, GAME_HEIGHT);
     endShape(CLOSE);
     
-    // Mur du fond (horizontal en haut)
-    fill(15, 15, 25, 255 * opacity); // Couleur légèrement différente
+    // Mur du fond (horizontal en haut) avec gradient orangé
+    let fondColor = color(50, 30, 20);
+    fill(fondColor.levels[0], fondColor.levels[1], fondColor.levels[2], 255 * opacity);
     rect(topLeftX, 0, topRightX - topLeftX, PERSPECTIVE_START_Y);
     
-    // Dessiner la route
+    // Dessiner la route du donjon avec des pierres sombres
     for (let y = PERSPECTIVE_START_Y; y < GAME_HEIGHT; y += 5) {
         let progress = (y - PERSPECTIVE_START_Y) / (GAME_HEIGHT - PERSPECTIVE_START_Y);
         let roadWidth = lerp(LANE_WIDTH_TOP * NUM_LANES, LANE_WIDTH_BOTTOM * NUM_LANES, progress);
-        fill(0, 0, 0, 250 * opacity);
+        // Sol en pierre sombre avec nuance de marron
+        fill(30, 22, 16, 250 * opacity);
         rect(GAME_WIDTH / 2 - roadWidth / 2, y, roadWidth, 5);
     }
     
-    // Dessiner les lignes de séparation des lanes
-    stroke(255, 255, 255, 150 * opacity);
+    // Dessiner les lignes de séparation des lanes avec lueur dorée
+    stroke(212, 175, 55, 180 * opacity); // Couleur dorée du site
     strokeWeight(2);
     
     for (let i = 1; i < NUM_LANES; i++) {
@@ -91,8 +94,8 @@ function drawRoad() {
         line(topX, PERSPECTIVE_START_Y, bottomX, GAME_HEIGHT);
     }
     
-    // Dessiner les bordures de la route (lignes entre route et murs)
-    stroke(255, 255, 255, 200 * opacity);
+    // Dessiner les bordures de la route avec lueur orangée
+    stroke(255, 140, 0, 220 * opacity); // Orange du site
     strokeWeight(3);
     line(topLeftX, PERSPECTIVE_START_Y, bottomLeftX, GAME_HEIGHT);
     line(topRightX, PERSPECTIVE_START_Y, bottomRightX, GAME_HEIGHT);
