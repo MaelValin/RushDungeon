@@ -40,6 +40,12 @@ function initPlayer() {
     "player/jump_anim/jump_5.png"
   ]);
   
+  // Load attack animation
+  player.addAni("attack", "player/attack_anim/chevalierAttack.png", {
+    frameSize: [306, 408],
+    frames: 2
+  });
+  
   player.ani = "run";
   player.ani.frameDelay = 8;
   player.ani.scale = 0.6;
@@ -165,6 +171,21 @@ function checkObstacleCollisions() {
       if (soundKillMob) soundKillMob.play();
       closestObstacle.remove();
       hasWeapon = false;
+      
+      // Déclencher l'animation d'attaque
+      player.changeAni('attack');
+      player.ani.frameDelay = 6;
+      player.ani.scale = 2; // Agrandir l'animation d'attaque
+      
+      // Revenir à l'animation de course après un court délai
+      setTimeout(() => {
+        if (player.ani.name === 'attack') {
+          player.changeAni('run');
+          player.ani.frameDelay = 8;
+          player.ani.scale = 0.6; // Remettre la taille normale
+        }
+      }, 200); // Durée de l'animation d'attaque
+      
       return;
     }
   }
@@ -202,9 +223,12 @@ function jump() {
       playerVz = 0;
       readyToJump = true;
       
-      player.changeAni("run");
-      player.ani.frameDelay = 8;
-      player.ani.loop();
+      // Ne pas changer l'animation si on est en train d'attaquer
+      if (player.ani.name !== "attack") {
+        player.changeAni("run");
+        player.ani.frameDelay = 8;
+        player.ani.loop();
+      }
 
       for (let obs of obstacles1) {
         obs.collider = "kinematic";
@@ -213,7 +237,8 @@ function jump() {
   } else {
     readyToJump = true;
     
-    if (player.ani.name !== "run") {
+    // Ne pas changer l'animation si on est en train d'attaquer
+    if (player.ani.name !== "run" && player.ani.name !== "attack") {
       player.changeAni("run");
       player.ani.frameDelay = 8;
       player.ani.loop();
