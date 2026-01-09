@@ -39,6 +39,7 @@ function initPlayer() {
     "player/jump_anim/jump_4.png",
     "player/jump_anim/jump_5.png"
   ]);
+
   
   // Load attack animation
   player.addAni("attack", "player/attack_anim/chevalierAttack.png", {
